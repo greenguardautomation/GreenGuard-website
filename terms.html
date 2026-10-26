@@ -36,12 +36,54 @@
   </a>
   <nav aria-label="Main">
     <ul class="nav-links">
-      <li><a href="ecoray.html">Ecoray</a></li>
-      <li><a href="about.html">About</a></li>
+      <li class="has-menu">
+        <a href="ecoray.html">Ecoray</a>
+        <div class="dropdown">
+          <ul>
+            <li><a href="ecoray.html"><strong>Overview</strong><span>What Ecoray does in the crop row</span></a></li>
+            <li><a href="ecoray.html#field"><strong>Field trial</strong><span>Watch it work in a vegetable field</span></a></li>
+            <li><a href="ecoray.html#capacity"><strong>Capacity</strong><span>Hectares per hour by number of modules</span></a></li>
+            <li><a href="ecoray.html#crops"><strong>Crops</strong><span>Carrots, onions, beets, Nordmann fir</span></a></li>
+            <li><a href="ecoray.html#specs"><strong>Key specifications</strong><span>The numbers that matter on the farm</span></a></li>
+          </ul>
+        </div>
+      </li>
+      <li class="has-menu">
+        <a href="technology.html">Technology</a>
+        <div class="dropdown">
+          <ul>
+            <li><a href="technology.html#how"><strong>How it works</strong><span>Detect, target, eliminate in one pass</span></a></li>
+            <li><a href="technology.html#vision"><strong>Vision and AI</strong><span>Cameras, strobed lighting, edge computing</span></a></li>
+            <li><a href="technology.html#laser"><strong>Laser and optics</strong><span>Galvo beam steering to the meristem</span></a></li>
+            <li><a href="technology.html#safety"><strong>Safety</strong><span>Sealed hood, hardwired interlocks, standards</span></a></li>
+            <li><a href="technology.html#specs"><strong>Technical specifications</strong><span>The full spec sheet</span></a></li>
+          </ul>
+        </div>
+      </li>
+      <li class="has-menu">
+        <a href="about.html">Company</a>
+        <div class="dropdown">
+          <ul>
+            <li><a href="about.html#mission"><strong>Who we are</strong><span>Why GreenGuard exists</span></a></li>
+            <li><a href="about.html#team"><strong>Team</strong><span>The engineers behind Ecoray</span></a></li>
+            <li><a href="about.html#supporters"><strong>Supporters</strong><span>Funds and programmes backing us</span></a></li>
+            <li><a href="about.html#contact"><strong>Contact</strong><span>Email, phone and office</span></a></li>
+          </ul>
+        </div>
+      </li>
+      <li class="has-menu">
+        <a href="support.html">Support</a>
+        <div class="dropdown">
+          <ul>
+            <li><a href="support.html#faq"><strong>FAQ</strong><span>Answers to common questions</span></a></li>
+            <li><a href="support.html#owners"><strong>Owner support</strong><span>Manuals and service for your Ecoray</span></a></li>
+            <li><a href="support.html#contact"><strong>Contact support</strong><span>Reach a technician</span></a></li>
+          </ul>
+        </div>
+      </li>
     </ul>
   </nav>
   <div class="nav-cta">
-    
     <a class="btn btn--primary btn--small" href="reserve.html">Reserve</a>
     <button class="menu-btn" type="button" aria-expanded="false" aria-controls="menu">Menu</button>
   </div>
@@ -49,10 +91,34 @@
 
 <div class="sheet" id="menu" role="dialog" aria-modal="true" aria-label="Menu">
   <div class="sheet-top"><button class="menu-btn sheet-close" type="button" style="display:block">Close</button></div>
+  <p class="sheet-group"><a href="ecoray.html">Ecoray</a></p>
   <ul>
-      <li><a href="ecoray.html">Ecoray</a></li>
-      <li><a href="about.html">About</a></li>
+      <li><a href="ecoray.html">Overview</a></li>
+      <li><a href="ecoray.html#field">Field trial</a></li>
+      <li><a href="ecoray.html#capacity">Capacity</a></li>
+      <li><a href="ecoray.html#crops">Crops</a></li>
+      <li><a href="ecoray.html#specs">Key specifications</a></li>
+  </ul>
+  <p class="sheet-group"><a href="technology.html">Technology</a></p>
+  <ul>
+      <li><a href="technology.html#how">How it works</a></li>
+      <li><a href="technology.html#vision">Vision and AI</a></li>
+      <li><a href="technology.html#laser">Laser and optics</a></li>
+      <li><a href="technology.html#safety">Safety</a></li>
+      <li><a href="technology.html#specs">Technical specifications</a></li>
+  </ul>
+  <p class="sheet-group"><a href="about.html">Company</a></p>
+  <ul>
+      <li><a href="about.html#mission">Who we are</a></li>
+      <li><a href="about.html#team">Team</a></li>
+      <li><a href="about.html#supporters">Supporters</a></li>
       <li><a href="about.html#contact">Contact</a></li>
+  </ul>
+  <p class="sheet-group"><a href="support.html">Support</a></p>
+  <ul>
+      <li><a href="support.html#faq">FAQ</a></li>
+      <li><a href="support.html#owners">Owner support</a></li>
+      <li><a href="support.html#contact">Contact support</a></li>
   </ul>
   <a class="btn btn--primary" href="reserve.html">Reserve Ecoray</a>
 </div>
@@ -111,17 +177,21 @@
 
 <footer class="footer">
   <div class="footer-inner">
-    <p>GreenGuard Automation ApS &copy; <span data-year>2026</span>, CVR 45534588</p>
-    <ul>
-      <li><a href="ecoray.html">Ecoray</a></li>
-      <li><a href="about.html">About</a></li>
-      <li><a href="reserve.html">Reserve</a></li>
-      <li><a href="about.html#contact">Contact</a></li>
-      <li><a href="m/">Owner support</a></li>
-      <li><a href="https://www.linkedin.com/company/greenguard-automation/">LinkedIn</a></li>
-      <li><a href="privacy.html">Privacy</a></li>
-      <li><a href="terms.html">Terms</a></li>
-    </ul>
+    <div class="footer-cols">
+      <div><p class="footer-head"><a href="ecoray.html">Ecoray</a></p><ul><li><a href="ecoray.html#field">Field trial</a></li><li><a href="ecoray.html#capacity">Capacity</a></li><li><a href="ecoray.html#crops">Crops</a></li><li><a href="ecoray.html#specs">Key specifications</a></li></ul></div>
+      <div><p class="footer-head"><a href="technology.html">Technology</a></p><ul><li><a href="technology.html#vision">Vision and AI</a></li><li><a href="technology.html#laser">Laser and optics</a></li><li><a href="technology.html#safety">Safety</a></li><li><a href="technology.html#specs">Technical specifications</a></li></ul></div>
+      <div><p class="footer-head"><a href="about.html">Company</a></p><ul><li><a href="about.html#team">Team</a></li><li><a href="about.html#supporters">Supporters</a></li><li><a href="about.html#contact">Contact</a></li></ul></div>
+      <div><p class="footer-head"><a href="support.html">Support</a></p><ul><li><a href="support.html#faq">FAQ</a></li><li><a href="support.html#owners">Owner support</a></li></ul></div>
+    </div>
+    <div class="footer-base">
+      <p>GreenGuard Automation ApS &copy; <span data-year>2026</span>, CVR 45534588, Bautavej 1A, 8210 Aarhus V</p>
+      <ul>
+        <li><a href="reserve.html">Reserve</a></li>
+        <li><a href="https://www.linkedin.com/company/greenguard-automation/">LinkedIn</a></li>
+        <li><a href="privacy.html">Privacy</a></li>
+        <li><a href="terms.html">Terms</a></li>
+      </ul>
+    </div>
   </div>
 </footer>
 
