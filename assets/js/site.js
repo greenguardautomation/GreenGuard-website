@@ -44,6 +44,34 @@
     });
   }
 
+  // Film player: any [data-film] button opens the dialog and plays with sound.
+  var film = document.getElementById("film");
+  if (film && film.showModal) {
+    var filmVideo = film.querySelector("video");
+    var opener = null;
+    document.querySelectorAll("[data-film]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        opener = btn;
+        if (filmVideo.getAttribute("src") !== btn.dataset.film) filmVideo.src = btn.dataset.film;
+        film.showModal();
+        var p = filmVideo.play();
+        if (p && p.catch) p.catch(function () {});
+      });
+    });
+    var closeFilm = function () { if (film.open) film.close(); };
+    film.querySelector(".film-close").addEventListener("click", closeFilm);
+    film.addEventListener("click", function (e) { if (e.target === film) closeFilm(); });
+    film.addEventListener("close", function () {
+      filmVideo.pause();
+      if (opener) opener.focus();
+    });
+  } else {
+    // Very old browsers: open the file directly.
+    document.querySelectorAll("[data-film]").forEach(function (btn) {
+      btn.addEventListener("click", function () { window.location.href = btn.dataset.film; });
+    });
+  }
+
   // Current year in footer
   document.querySelectorAll("[data-year]").forEach(function (el) {
     el.textContent = new Date().getFullYear();

@@ -32,6 +32,11 @@ assets/
 
 Images in `assets/media/` exist as `.webp` plus a `.jpg` fallback. Keep new images under ~300 KB: resize to at most 2400 px wide before adding them.
 
+Videos in `assets/media/`:
+- `field-loop.mp4` / `field-loop-sm.mp4`: silent 15-second background loop of field footage (desktop / mobile)
+- `ecoray-film.mp4`: the 34-second Ecoray film, opened by the "Watch the film" buttons
+- `field-trial-film.mp4`: the field trial film (Danish captions) on the Ecoray page
+
 ## Reserve form
 
 GitHub Pages cannot run server code, so the reserve form is sent through [FormSubmit](https://formsubmit.co) to the address in `assets/js/reserve.js`. The very first submission to a new address triggers a one-time activation email from FormSubmit; click the link in it, and later submissions arrive normally.

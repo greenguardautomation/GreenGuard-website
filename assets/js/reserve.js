@@ -8,26 +8,31 @@
 
   var RECIPIENT = "contact@greenguardautomation.dk";
   var ENDPOINT = "https://formsubmit.co/ajax/" + RECIPIENT;
-  var MODULE_WIDTH_M = 0.6;
+  var MODULE_WIDTH_M = 1.0;      // about 1 m per module
+  var HA_PER_HOUR_PER_MODULE = 0.2; // 2 modules ≈ 0.4 ha/h, 5 modules ≈ 1 ha/h
 
   var form = document.getElementById("reserve-form");
   if (!form) return;
 
   var sumWidth = document.getElementById("sum-width");
-  var sumModules = document.getElementById("sum-modules");
+  var sumCapacity = document.getElementById("sum-capacity");
   var caption = document.getElementById("visual-caption");
   var status = document.getElementById("form-status");
 
   function fmtWidth(n) {
-    return (n * MODULE_WIDTH_M).toFixed(1).replace(/\.0$/, "") + " m";
+    return "\u2248" + (n * MODULE_WIDTH_M).toFixed(1).replace(/\.0$/, "") + " m";
+  }
+  function fmtCapacity(n) {
+    return "\u2248" + (n * HA_PER_HOUR_PER_MODULE).toFixed(1).replace(/\.0$/, "");
   }
 
   function updateSummary() {
     var checked = form.querySelector('input[name="modules"]:checked');
     var n = checked ? parseInt(checked.value, 10) : 1;
-    sumModules.textContent = n;
     sumWidth.textContent = fmtWidth(n);
-    caption.textContent = n + (n === 1 ? " module, " : " modules, ") + fmtWidth(n) + " working width";
+    sumCapacity.textContent = fmtCapacity(n);
+    caption.textContent = n + (n === 1 ? " module, about " : " modules, about ") +
+      (n * MODULE_WIDTH_M).toFixed(1).replace(/\.0$/, "") + " m working width";
   }
   form.addEventListener("change", function (e) {
     if (e.target.name === "modules") updateSummary();
@@ -84,6 +89,7 @@
       _captcha: "false",
       modules: data.get("modules"),
       working_width: fmtWidth(parseInt(data.get("modules"), 10)),
+      capacity_ha_per_hour: fmtCapacity(parseInt(data.get("modules"), 10)),
       crops: crops.length ? crops.join(", ") : "Not specified",
       farm: data.get("farm") || "",
       row_crop_area_ha: data.get("area_ha") || "",
