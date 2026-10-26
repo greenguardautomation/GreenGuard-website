@@ -6,7 +6,7 @@
 (function () {
   "use strict";
 
-  var RECIPIENT = "greenguardauto@gmail.com";
+  var RECIPIENT = "contact@greenguardautomation.dk";
   var ENDPOINT = "https://formsubmit.co/ajax/" + RECIPIENT;
   var MODULE_WIDTH_M = 0.6;
 
