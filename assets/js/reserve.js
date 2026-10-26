@@ -1,4 +1,4 @@
-/* Reserve page: live summary and form submission (English and Danish).
+/* Reserve page: live summary and form submission .
    Submissions are emailed to GreenGuard through FormSubmit (formsubmit.co),
    because GitHub Pages cannot run server code. To change the receiving inbox,
    edit RECIPIENT below. The first submission to a new address triggers a
@@ -11,29 +11,17 @@
   var MODULE_WIDTH_M = 1.0;         // about 1 m per module
   var HA_PER_HOUR_PER_MODULE = 0.2; // 2 modules ≈ 0.4 ha/h, 5 modules ≈ 1 ha/h
 
-  var DA = (document.documentElement.lang || "en").indexOf("da") === 0;
-  var T = DA ? {
-    module: " modul, cirka ", modules: " moduler, cirka ", width: " m arbejdsbredde",
-    first: "Skriv dit fornavn.", last: "Skriv dit efternavn.",
-    email: "Skriv en e-mailadresse, så vi kan sende dig et tilbud.",
-    emailBad: "Tjek e-mailadressen, den ser ikke komplet ud.",
-    sending: "Sender reservation …", submit: "Reservér Ecoray",
-    thanks: function (name, email, n) {
-      return "Tak, " + name + ". Vi kontakter dig på " + email + " med et tilbud på " + n + (n === "1" ? " modul." : " moduler.");
-    },
-    failed: "Din reservation blev ikke sendt. Tjek din forbindelse og prøv igen, eller skriv til os på ",
-    none: "Ikke angivet", lang: "Dansk"
-  } : {
+  var T = {
     module: " module, about ", modules: " modules, about ", width: " m working width",
     first: "Enter your first name.", last: "Enter your last name.",
     email: "Enter an email address so we can send your quote.",
     emailBad: "Check the email address, it doesn't look complete.",
-    sending: "Sending reservation…", submit: "Reserve Ecoray",
+    sending: "Sending reservation\u2026", submit: "Reserve Ecoray",
     thanks: function (name, email, n) {
       return "Thanks, " + name + ". We'll contact you at " + email + " with a quote for " + n + (n === "1" ? " module." : " modules.");
     },
     failed: "Your reservation wasn't sent. Check your connection and try again, or email us at ",
-    none: "Not specified", lang: "English"
+    none: "Not specified"
   };
 
   var form = document.getElementById("reserve-form");
@@ -44,10 +32,7 @@
   var caption = document.getElementById("visual-caption");
   var status = document.getElementById("form-status");
 
-  function num(x) {
-    var s = x.toFixed(1).replace(/\.0$/, "");
-    return DA ? s.replace(".", ",") : s;
-  }
+  function num(x) { return x.toFixed(1).replace(/\.0$/, ""); }
   function fmtWidth(n) { return "≈" + num(n * MODULE_WIDTH_M) + " m"; }
   function fmtCapacity(n) { return "≈" + num(n * HA_PER_HOUR_PER_MODULE); }
 
@@ -121,7 +106,6 @@
       email: data.get("email"),
       phone: data.get("phone") || "",
       message: data.get("message") || "",
-      language: T.lang,
       _replyto: data.get("email")
     };
 

@@ -13,7 +13,6 @@ Company website for GreenGuard Automation: the Ecoray laser weeder.
 | `reserve.html` | `/reserve` | Reserve/order form for the 2027 season |
 | `about.html` | `/about` | Who we are, team, supporters, contact |
 | `privacy.html`, `terms.html` | | Legal pages |
-| `da/*.html` | `/da/…` | Danish versions of the four main pages |
 | `m/index.html` | `/m` | Owner support page behind the nameplate QR code. Never delete. |
 | `404.html` | | Shown for any unknown address |
 | `e1/index.html` | `/e1` | QR-code redirect from the machine nameplate. Never delete. |

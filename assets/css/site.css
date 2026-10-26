@@ -102,11 +102,6 @@ p { margin: 0; }
 .nav-links a:hover { background: rgba(127,127,127,.18); }
 .nav-links a[aria-current="page"] { background: rgba(127,127,127,.14); }
 .nav-cta { display: flex; align-items: center; gap: 8px; }
-.lang-switch {
-  padding: 8px 10px; border-radius: var(--radius); font-size: 14px; font-weight: 500;
-  text-decoration: none; opacity: .85;
-}
-.lang-switch:hover { opacity: 1; background: rgba(127,127,127,.18); }
 .menu-btn {
   display: none; border: 0; background: rgba(127,127,127,.18); color: inherit;
   font: 500 15px var(--font); padding: 8px 14px; border-radius: var(--radius); cursor: pointer;
@@ -114,7 +109,6 @@ p { margin: 0; }
 
 @media (max-width: 760px) {
   .nav-links { display: none; }
-  .nav-cta .lang-switch { display: none; }
   .nav-cta .btn { display: none; }
   .menu-btn { display: block; }
 }
