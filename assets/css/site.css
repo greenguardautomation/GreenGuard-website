@@ -309,13 +309,19 @@ p { margin: 0; }
 @media (max-width: 620px) { .capacity { grid-template-columns: 1fr; } }
 
 /* ---------- About ---------- */
-.team { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; margin-top: 56px; }
+.team { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 32px; margin-top: 56px; }
 .person img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; object-position: center 20%; border-radius: var(--radius); background: var(--line); }
+.person-initials {
+  width: 100%; aspect-ratio: 4 / 5; border-radius: var(--radius);
+  display: flex; align-items: center; justify-content: center;
+  background: var(--forest); color: var(--sage);
+  font-size: clamp(48px, 6vw, 72px); font-weight: 600; font-variation-settings: var(--wide);
+}
 .person h3 { margin-top: 18px; font-size: 20px; }
 .person .role { margin-top: 2px; color: var(--ink-2); font-weight: 500; }
 .person p { margin-top: 10px; color: var(--ink-2); font-size: 16px; }
 .person a { display: inline-block; margin-top: 10px; font-size: 15px; font-weight: 500; text-underline-offset: 3px; }
-@media (max-width: 860px) { .team { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 1000px) { .team { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 560px) { .team { grid-template-columns: 1fr; } }
 
 .logos {
