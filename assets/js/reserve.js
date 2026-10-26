@@ -1,4 +1,4 @@
-/* Reserve page: live summary and form submission.
+/* Reserve page: live summary and form submission (English and Danish).
    Submissions are emailed to GreenGuard through FormSubmit (formsubmit.co),
    because GitHub Pages cannot run server code. To change the receiving inbox,
    edit RECIPIENT below. The first submission to a new address triggers a
@@ -8,8 +8,33 @@
 
   var RECIPIENT = "contact@greenguardautomation.dk";
   var ENDPOINT = "https://formsubmit.co/ajax/" + RECIPIENT;
-  var MODULE_WIDTH_M = 1.0;      // about 1 m per module
+  var MODULE_WIDTH_M = 1.0;         // about 1 m per module
   var HA_PER_HOUR_PER_MODULE = 0.2; // 2 modules ≈ 0.4 ha/h, 5 modules ≈ 1 ha/h
+
+  var DA = (document.documentElement.lang || "en").indexOf("da") === 0;
+  var T = DA ? {
+    module: " modul, cirka ", modules: " moduler, cirka ", width: " m arbejdsbredde",
+    first: "Skriv dit fornavn.", last: "Skriv dit efternavn.",
+    email: "Skriv en e-mailadresse, så vi kan sende dig et tilbud.",
+    emailBad: "Tjek e-mailadressen, den ser ikke komplet ud.",
+    sending: "Sender reservation …", submit: "Reservér Ecoray",
+    thanks: function (name, email, n) {
+      return "Tak, " + name + ". Vi kontakter dig på " + email + " med et tilbud på " + n + (n === "1" ? " modul." : " moduler.");
+    },
+    failed: "Din reservation blev ikke sendt. Tjek din forbindelse og prøv igen, eller skriv til os på ",
+    none: "Ikke angivet", lang: "Dansk"
+  } : {
+    module: " module, about ", modules: " modules, about ", width: " m working width",
+    first: "Enter your first name.", last: "Enter your last name.",
+    email: "Enter an email address so we can send your quote.",
+    emailBad: "Check the email address, it doesn't look complete.",
+    sending: "Sending reservation…", submit: "Reserve Ecoray",
+    thanks: function (name, email, n) {
+      return "Thanks, " + name + ". We'll contact you at " + email + " with a quote for " + n + (n === "1" ? " module." : " modules.");
+    },
+    failed: "Your reservation wasn't sent. Check your connection and try again, or email us at ",
+    none: "Not specified", lang: "English"
+  };
 
   var form = document.getElementById("reserve-form");
   if (!form) return;
@@ -19,20 +44,19 @@
   var caption = document.getElementById("visual-caption");
   var status = document.getElementById("form-status");
 
-  function fmtWidth(n) {
-    return "\u2248" + (n * MODULE_WIDTH_M).toFixed(1).replace(/\.0$/, "") + " m";
+  function num(x) {
+    var s = x.toFixed(1).replace(/\.0$/, "");
+    return DA ? s.replace(".", ",") : s;
   }
-  function fmtCapacity(n) {
-    return "\u2248" + (n * HA_PER_HOUR_PER_MODULE).toFixed(1).replace(/\.0$/, "");
-  }
+  function fmtWidth(n) { return "≈" + num(n * MODULE_WIDTH_M) + " m"; }
+  function fmtCapacity(n) { return "≈" + num(n * HA_PER_HOUR_PER_MODULE); }
 
   function updateSummary() {
     var checked = form.querySelector('input[name="modules"]:checked');
     var n = checked ? parseInt(checked.value, 10) : 1;
     sumWidth.textContent = fmtWidth(n);
     sumCapacity.textContent = fmtCapacity(n);
-    caption.textContent = n + (n === 1 ? " module, about " : " modules, about ") +
-      (n * MODULE_WIDTH_M).toFixed(1).replace(/\.0$/, "") + " m working width";
+    caption.textContent = n + (n === 1 ? T.module : T.modules) + num(n * MODULE_WIDTH_M) + T.width;
   }
   form.addEventListener("change", function (e) {
     if (e.target.name === "modules") updateSummary();
@@ -61,12 +85,10 @@
 
   function validate() {
     var first = null;
-    [["f-first", "Enter your first name."],
-     ["f-last", "Enter your last name."],
-     ["f-email", "Enter an email address so we can send your quote."]].forEach(function (pair) {
+    [["f-first", T.first], ["f-last", T.last], ["f-email", T.email]].forEach(function (pair) {
       var input = document.getElementById(pair[0]);
       var bad = !input.value.trim() || (input.type === "email" && !input.checkValidity());
-      var msg = bad ? (input.type === "email" && input.value.trim() ? "Check the email address, it doesn't look complete." : pair[1]) : "";
+      var msg = bad ? (input.type === "email" && input.value.trim() ? T.emailBad : pair[1]) : "";
       setError(input, msg);
       if (bad && !first) first = input;
     });
@@ -83,14 +105,15 @@
 
     var data = new FormData(form);
     var crops = data.getAll("crops");
+    var n = parseInt(data.get("modules"), 10);
     var payload = {
       _subject: "Ecoray reservation: " + (data.get("farm") || data.get("last_name")),
       _template: "table",
       _captcha: "false",
       modules: data.get("modules"),
-      working_width: fmtWidth(parseInt(data.get("modules"), 10)),
-      capacity_ha_per_hour: fmtCapacity(parseInt(data.get("modules"), 10)),
-      crops: crops.length ? crops.join(", ") : "Not specified",
+      working_width: fmtWidth(n),
+      capacity_ha_per_hour: fmtCapacity(n),
+      crops: crops.length ? crops.join(", ") : T.none,
       farm: data.get("farm") || "",
       row_crop_area_ha: data.get("area_ha") || "",
       country: data.get("country"),
@@ -98,12 +121,13 @@
       email: data.get("email"),
       phone: data.get("phone") || "",
       message: data.get("message") || "",
+      language: T.lang,
       _replyto: data.get("email")
     };
 
     var button = form.querySelector('button[type="submit"]');
     button.disabled = true;
-    button.textContent = "Sending reservation…";
+    button.textContent = T.sending;
 
     fetch(ENDPOINT, {
       method: "POST",
@@ -115,19 +139,16 @@
         if (!res.ok || String(res.body.success) !== "true") throw new Error(res.body.message || "Failed");
         document.getElementById("order-form-wrap").hidden = true;
         var done = document.getElementById("order-done");
-        document.getElementById("done-text").textContent =
-          "Thanks, " + data.get("first_name") + ". We'll contact you at " + data.get("email") +
-          " with a quote for " + payload.modules + (payload.modules === "1" ? " module." : " modules.");
+        document.getElementById("done-text").textContent = T.thanks(data.get("first_name"), data.get("email"), payload.modules);
         done.hidden = false;
         done.focus();
         window.scrollTo({ top: 0 });
       })
       .catch(function () {
         button.disabled = false;
-        button.textContent = "Reserve Ecoray";
+        button.textContent = T.submit;
         status.classList.add("is-error");
-        status.innerHTML = "Your reservation wasn't sent. Check your connection and try again, or email us at " +
-          '<a href="mailto:' + RECIPIENT + '">' + RECIPIENT + "</a>.";
+        status.innerHTML = T.failed + '<a href="mailto:' + RECIPIENT + '">' + RECIPIENT + "</a>.";
       });
   });
 })();
