@@ -1,174 +1,89 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="utf-8">
-  <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <title>404 - Page Not Found | GreenGuard Automation</title>
-  <meta name="description" content="Page not found.">
-  <meta name="keywords" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Page not found | GreenGuard Automation</title>
+  <meta name="description" content="This page doesn't exist.">
+  <link rel="canonical" href="https://greenguardautomation.com/404">
+  <meta name="theme-color" content="#0e1215">
 
-  <!-- Favicons -->
-  <link rel="icon" type="image/svg+xml" href="assets/img/brand/GGA_Logo-1.0.svg">
-  <link rel="icon" href="assets/img/brand/GGA_Logo-250-1.0.png">
-  <link href="assets/img/brand/GGA_Logo-500-1.0.png" rel="apple-touch-icon">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="GreenGuard Automation">
+  <meta property="og:url" content="https://greenguardautomation.com/404">
+  <meta property="og:title" content="Page not found | GreenGuard Automation">
+  <meta property="og:description" content="This page doesn't exist.">
+  <meta property="og:image" content="https://greenguardautomation.com/assets/media/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
 
-  <!-- Fonts -->
-  <link href="https://fonts.googleapis.com" rel="preconnect">
-  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
-    rel="stylesheet">
+  <link rel="icon" type="image/svg+xml" href="/assets/img/brand/GGA_Logo.svg">
+  <link rel="icon" type="image/png" href="/assets/img/brand/GGA_Logo-250.png">
+  <link rel="apple-touch-icon" href="/assets/img/brand/GGA_Logo-500.png">
 
-  <!-- Vendor CSS Files -->
-  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
-  <link href="assets/vendor/aos/aos.css" rel="stylesheet">
-  <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
-  <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
-
-  <!-- Main CSS File -->
-  <link href="assets/css/main.css" rel="stylesheet">
+  <link rel="preload" href="/assets/fonts/archivo-latin-wdth-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/assets/css/site.css">
 </head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
 
-<body class="page-404">
+<header class="nav" data-stay-clear>
+  <a class="brand" href="/" aria-label="GreenGuard Automation, home">
+    <img src="/assets/img/brand/GGA_Logo.svg" alt="" width="26" height="26">
+    <span>GREENGUARD</span>
+  </a>
+  <nav aria-label="Main">
+    <ul class="nav-links">
+      <li><a href="/ecoray.html">Ecoray</a></li>
+      <li><a href="/about.html">About</a></li>
+    </ul>
+  </nav>
+  <div class="nav-cta">
+    <a class="btn btn--primary btn--small" href="/reserve.html">Reserve</a>
+    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="menu">Menu</button>
+  </div>
+</header>
 
-  <header id="header" class="header d-flex align-items-center sticky-top">
-    <div class="container-fluid container-xl position-relative d-flex align-items-center justify-content-between">
+<div class="sheet" id="menu" role="dialog" aria-modal="true" aria-label="Menu">
+  <div class="sheet-top"><button class="menu-btn sheet-close" type="button" style="display:block">Close</button></div>
+  <ul>
+      <li><a href="/ecoray.html">Ecoray</a></li>
+      <li><a href="/about.html">About</a></li>
+      <li><a href="/about.html#contact">Contact</a></li>
+  </ul>
+  <a class="btn btn--primary" href="/reserve.html">Reserve Ecoray</a>
+</div>
 
-      <a href="index.html" class="logo d-flex align-items-center">
-        <picture>
-          <source srcset="assets/img/brand/GGA_Logo-1.0.svg" type="image/svg+xml">
-          <img src="assets/img/brand/GGA_Logo-500-1.0.png" alt="GreenGuard Automation logo" class="img-fluid">
-        </picture>
-        <h1 class="sitename">GreenGuard Automation</h1>
-      </a>
-
-      <nav id="navmenu" class="navmenu">
-        <ul>
-          <li><a href="index.html#mission">Mission</a></li>
-          <li><a href="index.html#technology">Technology</a></li>
-          <li><a href="index.html#team">Team</a></li>
-          <li><a href="index.html#contact">Contact</a></li>
-          <li><a href="index.html#partners">Partners</a></li>
-        </ul>
-        <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
-      </nav>
-
-    </div>
-  </header>
-
-  <main class="main">
-
-    <!-- Error 404 Section -->
-    <section id="error-404" class="error-404 section">
-
-      <div class="container" data-aos="fade-up" data-aos-delay="100">
-
-        <div class="row justify-content-center text-center">
-          <div class="col-lg-8">
-
-            <div class="error-content">
-              <div class="error-number" data-aos="zoom-in" data-aos-delay="200">404</div>
-
-              <h1 class="error-title" data-aos="fade-up" data-aos-delay="300">Page Not Found</h1>
-
-              <p class="error-description" data-aos="fade-up" data-aos-delay="400">
-                The page you are looking for might have been removed, had its name changed, or is temporarily
-                unavailable.
-              </p>
-
-              <div class="error-actions" data-aos="fade-up" data-aos-delay="500">
-                <a href="index.html" class="btn-get-started">Return Home</a>
-              </div>
-
-            </div>
-
-          </div>
-        </div>
-
-      </div>
-
-    </section><!-- /Error 404 Section -->
-
-  </main>
-
-  <footer id="footer" class="footer dark-background">
-
-    <div class="container footer-top">
-      <div class="row gy-4">
-        <div class="col-lg-5 col-md-12 footer-about">
-          <a href="index.html" class="logo d-flex align-items-center">
-            <span class="sitename">GreenGuard</span>
-          </a>
-          <p>GreenGuard Automation develops laser-based weed control for sustainable agriculture.</p>
-          <div class="social-links d-flex mt-4">
-            <a href="https://www.linkedin.com/company/greenguard-automation/" aria-label="LinkedIn"><i
-                class="bi bi-linkedin"></i></a>
-          </div>
-        </div>
-
-        <div class="col-lg-2 col-6 footer-links">
-          <h4>Useful Links</h4>
-          <ul>
-            <li><a href="index.html#hero">Home</a></li>
-            <li><a href="index.html#problem">Problem</a></li>
-            <li><a href="index.html#loesning">Solution</a></li>
-            <li><a href="index.html#mission">Mission</a></li>
-            <li><a href="index.html#technology">Technology</a></li>
-          </ul>
-        </div>
-
-        <div class="col-lg-2 col-6 footer-about">
-          <h4>Our Vision</h4>
-          <p class="mt-3">To revolutionize weed control through chemical-free technology and precision — for more
-            sustainable and profitable agriculture.</p>
-        </div>
-
-        <div class="col-lg-3 col-md-12 footer-contact text-center text-md-start">
-          <h4>Contact Info</h4>
-          <p><strong>Company Address:</strong><br>Langelandsgade 209, 1. th<br>8200 Aarhus N</p>
-          <p><strong>Office Address:</strong><br>Universitetsbyen 14<br>8000 Aarhus</p>
-          <p><strong>Phone:</strong><br>Thomas Bjerrum: 42 56 88 48<br>Benjamin Tvorup: 22 86 23 23</p>
-          <p><strong>Email:</strong> <span>kontakt@greenguardautomation.dk</span></p>
-        </div>
-
+<main id="main">
+  <section class="panel" aria-labelledby="h-404" style="justify-content:center">
+    <div class="panel-media panel-media--contain"><picture><source type="image/webp" srcset="/assets/media/ecoray-side-sm.webp 1200w, /assets/media/ecoray-side.webp 2400w" sizes="100vw"><img src="/assets/media/ecoray-side.jpg" srcset="/assets/media/ecoray-side-sm.jpg 1200w, /assets/media/ecoray-side.jpg 2400w" sizes="100vw" alt="" loading="lazy" decoding="async"></picture></div>
+    <div class="panel-head">
+      <h1 id="h-404">Page not found</h1>
+      <p>The page may have moved. Try one of these instead.</p>
+      <div class="btn-row" style="margin-top:32px">
+        <a class="btn btn--light" href="/">Go to the home page</a>
+        <a class="btn btn--ghost" href="/ecoray.html">Explore Ecoray</a>
       </div>
     </div>
+  </section>
+</main>
 
-    <div class="container copyright text-center mt-4">
-      <p>© <span>Copyright</span> <strong class="px-1 sitename">GreenGuard</strong> <span>All Rights Reserved</span></p>
-      <div class="credits">
-        <!-- All the links in the footer should remain intact. -->
-        <!-- You can delete the links only if you've purchased the pro version. -->
-        <!-- Licensing information: https://bootstrapmade.com/license/ -->
-        <!-- Purchase the pro version with working PHP/AJAX contact form: [buy-url] -->
-        Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
-      </div>
-    </div>
+<footer class="footer footer--dark">
+  <div class="footer-inner">
+    <p>GreenGuard Automation ApS &copy; <span data-year>2026</span>, CVR 45534588</p>
+    <ul>
+      <li><a href="/ecoray.html">Ecoray</a></li>
+      <li><a href="/reserve.html">Reserve</a></li>
+      <li><a href="/about.html">About</a></li>
+      <li><a href="/about.html#contact">Contact</a></li>
+      <li><a href="https://www.linkedin.com/company/greenguard-automation/">LinkedIn</a></li>
+      <li><a href="/privacy.html">Privacy</a></li>
+      <li><a href="/terms.html">Terms</a></li>
+    </ul>
+  </div>
+</footer>
 
-  </footer>
-
-  <!-- Scroll Top -->
-  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i
-      class="bi bi-arrow-up-short"></i></a>
-
-  <!-- Preloader -->
-  <div id="preloader"></div>
-
-  <!-- Vendor JS Files -->
-  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <script src="assets/vendor/php-email-form/validate.js"></script>
-  <script src="assets/vendor/aos/aos.js"></script>
-  <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
-  <script src="assets/vendor/purecounter/purecounter_vanilla.js"></script>
-  <script src="assets/vendor/imagesloaded/imagesloaded.pkgd.min.js"></script>
-  <script src="assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
-  <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
-
-  <!-- Main JS File -->
-  <script src="assets/js/main.js"></script>
-
+<script src="/assets/js/site.js" defer></script>
 </body>
-
 </html>
