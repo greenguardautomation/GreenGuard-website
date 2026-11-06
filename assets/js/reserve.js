@@ -8,8 +8,10 @@
 
   var RECIPIENT = "contact@greenguardautomation.dk";
   var ENDPOINT = "https://formsubmit.co/ajax/" + RECIPIENT;
-  var MODULE_WIDTH_M = 1.0;         // about 1 m per module
-  var HA_PER_HOUR_PER_MODULE = 0.2; // 2 modules ≈ 0.4 ha/h, 5 modules ≈ 1 ha/h
+  var MODULE_WIDTH_M = 1.0;      // 1 m per module
+  var HA_MIN_PER_MODULE = 0.1;   // capacity range per module, depends on weed pressure
+  var HA_MAX_PER_MODULE = 0.3;
+  var INTRO_PRICE_DKK = 225000;  // per module, first 20 modules ordered by 15 January 2027 (excl. VAT and generator)
 
   var T = {
     module: " module, about ", modules: " modules, about ", width: " m working width",
@@ -30,17 +32,20 @@
   var sumWidth = document.getElementById("sum-width");
   var sumCapacity = document.getElementById("sum-capacity");
   var caption = document.getElementById("visual-caption");
+  var sumPrice = document.getElementById("sum-price");
   var status = document.getElementById("form-status");
 
   function num(x) { return x.toFixed(1).replace(/\.0$/, ""); }
-  function fmtWidth(n) { return "≈" + num(n * MODULE_WIDTH_M) + " m"; }
-  function fmtCapacity(n) { return "≈" + num(n * HA_PER_HOUR_PER_MODULE); }
+  function fmtWidth(n) { return num(n * MODULE_WIDTH_M) + " m"; }
+  function fmtCapacity(n) { return num(n * HA_MIN_PER_MODULE) + "\u2013" + num(n * HA_MAX_PER_MODULE); }
+  function fmtPrice(n) { return (n * INTRO_PRICE_DKK).toLocaleString("en-GB") + " DKK"; }
 
   function updateSummary() {
     var checked = form.querySelector('input[name="modules"]:checked');
-    var n = checked ? parseInt(checked.value, 10) : 1;
+    var n = checked ? parseInt(checked.value, 10) : 2;
     sumWidth.textContent = fmtWidth(n);
     sumCapacity.textContent = fmtCapacity(n);
+    if (sumPrice) sumPrice.textContent = fmtPrice(n);
     caption.textContent = n + (n === 1 ? T.module : T.modules) + num(n * MODULE_WIDTH_M) + T.width;
   }
   form.addEventListener("change", function (e) {
@@ -98,6 +103,7 @@
       modules: data.get("modules"),
       working_width: fmtWidth(n),
       capacity_ha_per_hour: fmtCapacity(n),
+      intro_price_excl_vat_and_generator: fmtPrice(n),
       crops: crops.length ? crops.join(", ") : T.none,
       farm: data.get("farm") || "",
       row_crop_area_ha: data.get("area_ha") || "",
