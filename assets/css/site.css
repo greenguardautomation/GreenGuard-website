@@ -429,6 +429,7 @@ legend { font-size: 18px; font-weight: 600; margin-bottom: 14px; padding: 0; }
 
 .choice-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
 .choice-row--3 { grid-template-columns: repeat(3, 1fr); }
+.choice-row--7 { grid-template-columns: repeat(7, 1fr); gap: 6px; }
 .order-panel .lang-switch { margin-top: 4px; font-size: 14px; }
 .order-panel .lang-switch a { color: var(--ink-2); text-underline-offset: 2px; }
 .choice { position: relative; }
