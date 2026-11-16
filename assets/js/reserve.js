@@ -9,9 +9,9 @@
 
   var RECIPIENT = "contact@greenguardautomation.dk";
   var ENDPOINT = "https://formsubmit.co/ajax/" + RECIPIENT;
-  var MODULE_WIDTH_M = 1.0;      // 1 m per module
-  var HA_MIN_PER_MODULE = 0.1;   // capacity range per module, depends on weed pressure
-  var HA_MAX_PER_MODULE = 0.3;
+  var MODULE_WIDTH_M = 0.6;      // 60 cm per module
+  var HA_MIN_PER_MODULE = 0.06;  // capacity range per module (1–3 km/h over 60 cm), depends on weed pressure
+  var HA_MAX_PER_MODULE = 0.18;
   var INTRO_PRICE_DKK = 225000;  // per module, first 20 modules ordered by 15 December 2026 (excl. VAT and generator)
   var RENT_PRICE_DKK = 100000;   // per module for the whole 2027 season, ordered by 15 December 2026
 
@@ -58,7 +58,8 @@
 
   function num(x) { return DA ? x.toFixed(1).replace(/\.0$/, "").replace(".", ",") : x.toFixed(1).replace(/\.0$/, ""); }
   function fmtWidth(n) { return num(n * MODULE_WIDTH_M) + " m"; }
-  function fmtCapacity(n) { return num(n * HA_MIN_PER_MODULE) + "–" + num(n * HA_MAX_PER_MODULE); }
+  function num2(x) { return DA ? x.toFixed(2).replace(".", ",") : x.toFixed(2); }
+  function fmtCapacity(n) { return num2(n * HA_MIN_PER_MODULE) + "–" + num2(n * HA_MAX_PER_MODULE); }
   function fmtDkk(x) { return DA ? x.toLocaleString(LOCALE) + " kr." : x.toLocaleString(LOCALE) + " DKK"; }
   function offerValue() {
     var o = form.querySelector('input[name="offer"]:checked');
