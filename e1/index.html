@@ -13,7 +13,7 @@
      what /e1 sends people to, and it can be changed as often as you like.
 
      TO CHANGE WHERE THE QR CODE LEADS:
-       edit the URL in the TWO places marked "TARGET" below, commit, push.
+       edit the URLs in the places marked "TARGET" below, commit, push.
        Live in about a minute.
 
      Deliberately NOT an HTTP 301: browsers cache a 301 permanently, so
@@ -23,7 +23,11 @@
 
 <script>
   // TARGET (1 of 2)
-  var TARGET = "https://greenguardautomation.com/reserver.html";
+  // Danish phones land on the Danish page, everyone else on the English one.
+  var LANG = (navigator.language || navigator.userLanguage || "da").toLowerCase();
+  var TARGET = LANG.indexOf("da") === 0
+    ? "https://greenguardautomation.com/reserver.html"
+    : "https://greenguardautomation.com/reserve.html";
   window.location.replace(TARGET);
 </script>
 <noscript>
