@@ -23,26 +23,26 @@
     first: "Skriv dit fornavn.", last: "Skriv dit efternavn.",
     email: "Skriv din e-mail, så vi kan sende dig et tilbud.",
     emailBad: "Tjek e-mailadressen, den ser ikke færdig ud.",
-    sending: "Sender…", submit: "Reserver Ecoray",
+    sending: "Sender…", submit: "Send mig et tilbud",
     priceBuy: "Intropris", priceRent: "Leje i 2027", priceDemo: "Intropris, hvis du køber",
     offer: { buy: "Køb", rent: "Leje i 2027", demo: "Demo først" },
     thanks: function (name, email, n) {
       return "Tak, " + name + ". Vi kontakter dig på " + email + " med et tilbud på " + n + (n === "1" ? " modul." : " moduler.");
     },
-    failed: "Din reservation blev ikke sendt. Tjek din forbindelse og prøv igen, eller skriv til ",
+    failed: "Din forespørgsel blev ikke sendt. Tjek din forbindelse og prøv igen, eller skriv til ",
     none: "Ikke angivet"
   } : {
     module: " module, about ", modules: " modules, about ", width: " m working width",
     first: "Enter your first name.", last: "Enter your last name.",
     email: "Enter an email address so we can send your quote.",
     emailBad: "Check the email address, it doesn't look complete.",
-    sending: "Sending reservation…", submit: "Reserve Ecoray",
+    sending: "Sending…", submit: "Get my quote",
     priceBuy: "Introductory price", priceRent: "Rental 2027", priceDemo: "Introductory price if you buy",
     offer: { buy: "Buy", rent: "Rent in 2027", demo: "Demo first" },
     thanks: function (name, email, n) {
       return "Thanks, " + name + ". We'll contact you at " + email + " with a quote for " + n + (n === "1" ? " module." : " modules.");
     },
-    failed: "Your reservation wasn't sent. Check your connection and try again, or email us at ",
+    failed: "Your request wasn't sent. Check your connection and try again, or email us at ",
     none: "Not specified"
   };
 
@@ -127,7 +127,7 @@
     var n = parseInt(data.get("modules"), 10);
     var offer = offerValue();
     var payload = {
-      _subject: "Ecoray " + (offer === "rent" ? "leje" : offer === "demo" ? "demo" : "reservation") + ": " + (data.get("farm") || data.get("last_name")),
+      _subject: "Ecoray tilbud (" + (offer === "rent" ? "leje" : offer === "demo" ? "demo" : "køb") + "): " + (data.get("farm") || data.get("last_name")),
       _template: "table",
       _captcha: "false",
       wants: T.offer[offer],
@@ -138,6 +138,7 @@
       crops: crops.length ? crops.join(", ") : T.none,
       farm: data.get("farm") || "",
       row_crop_area_ha: data.get("area_ha") || "",
+      row_spacing_cm: data.get("row_spacing_cm") || "",
       country: data.get("country"),
       name: data.get("first_name") + " " + data.get("last_name"),
       email: data.get("email"),
