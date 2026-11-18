@@ -14,6 +14,8 @@
   var HA_MAX_PER_MODULE = 0.18;
   var INTRO_PRICE_DKK = 225000;  // per module, first 20 modules ordered by 15 December 2026 (excl. VAT and generator)
   var RENT_PRICE_DKK = 100000;   // per module for the whole 2027 season, ordered by 15 December 2026
+  var INTRO_PRICE_EUR = 30000;   // the same offers in euros, as in the English brochure (shown on the English page)
+  var RENT_PRICE_EUR = 13500;
 
   var DA = (document.documentElement.lang || "").toLowerCase().indexOf("da") === 0;
   var LOCALE = DA ? "da-DK" : "en-GB";
@@ -60,12 +62,15 @@
   function fmtWidth(n) { return num(n * MODULE_WIDTH_M) + " m"; }
   function num2(x) { return DA ? x.toFixed(2).replace(".", ",") : x.toFixed(2); }
   function fmtCapacity(n) { return num2(n * HA_MIN_PER_MODULE) + "–" + num2(n * HA_MAX_PER_MODULE); }
-  function fmtDkk(x) { return DA ? x.toLocaleString(LOCALE) + " kr." : x.toLocaleString(LOCALE) + " DKK"; }
+  function fmtMoney(x) { return DA ? x.toLocaleString(LOCALE) + " kr." : "€" + x.toLocaleString(LOCALE); }
   function offerValue() {
     var o = form.querySelector('input[name="offer"]:checked');
     return o ? o.value : "buy";
   }
-  function fmtPrice(n, offer) { return fmtDkk(n * (offer === "rent" ? RENT_PRICE_DKK : INTRO_PRICE_DKK)); }
+  function fmtPrice(n, offer) {
+    var rent = DA ? RENT_PRICE_DKK : RENT_PRICE_EUR, buy = DA ? INTRO_PRICE_DKK : INTRO_PRICE_EUR;
+    return fmtMoney(n * (offer === "rent" ? rent : buy));
+  }
 
   function updateSummary() {
     var checked = form.querySelector('input[name="modules"]:checked');
