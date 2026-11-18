@@ -10,12 +10,19 @@ Company website for GreenGuard Automation: the Ecoray laser weeder.
 |---|---|---|
 | `index.html` | `/` | Home: full-screen product panels |
 | `ecoray.html` | `/ecoray` | Ecoray product page, how it works, specifications |
-| `reserve.html` | `/reserve` | Reserve/order form for the 2027 season |
+| `reserve.html` | `/reserve` | "Get a quote" form in English, prices in euros |
+| `reserver.html` | `/reserver` | "Få et tilbud" form in Danish, prices in kroner. The brochure and flyer QR code (`/e1`) sends Danish phones here |
+| `technology.html`, `support.html` | `/technology`, `/support` | How Ecoray works, questions and answers |
+| `da/*.html` | `/da/…` | The Danish version of the home, Ecoray, technology, support and company pages |
 | `about.html` | `/about` | Who we are, team, supporters, contact |
 | `privacy.html`, `terms.html` | | Legal pages |
 | `m/index.html` | `/m` | Owner support page behind the nameplate QR code. Never delete. |
 | `404.html` | | Shown for any unknown address |
 | `e1/index.html` | `/e1` | QR-code redirect from the machine nameplate. Never delete. |
+
+## Danish and English
+
+English pages sit in the root folder and show prices in euros. Danish pages sit in `da/` and show prices in kroner. A visitor whose browser is set to Danish is sent to the Danish page automatically; the "Dansk" / "English" link in the header switches language and is remembered. When you change a text, change it in both the English page and the Danish page with the same file name in `da/`.
 
 Every page is plain HTML. To change a text, open the page on GitHub, click the pencil icon, edit the words between the tags, and commit. The change is live in a few minutes.
 

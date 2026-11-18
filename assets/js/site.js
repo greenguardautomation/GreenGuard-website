@@ -36,6 +36,13 @@
     });
   }
 
+  // Language links remember the visitor's choice, so the automatic choice of Danish stops once they pick English.
+  document.querySelectorAll("a[data-lang]").forEach(function (a) {
+    a.addEventListener("click", function () {
+      try { localStorage.setItem("gg-lang", a.getAttribute("data-lang")); } catch (e) {}
+    });
+  });
+
   // Background videos: pause for visitors who prefer reduced motion.
   if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
     document.querySelectorAll("video[autoplay]").forEach(function (v) {
