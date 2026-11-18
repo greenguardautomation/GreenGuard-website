@@ -385,11 +385,9 @@ p { margin: 0; }
   display: grid; grid-template-columns: repeat(4, 1fr); gap: 40px 48px; align-items: center; justify-items: center;
   margin-top: 56px; list-style: none; padding: 0;
 }
-.logos img { max-height: 54px; width: auto; filter: grayscale(1); opacity: .8; transition: filter .2s, opacity .2s; }
+.logos img { max-height: 54px; max-width: 100%; width: auto; height: auto; filter: grayscale(1); opacity: .8; transition: filter .2s, opacity .2s; }
 .logos a:hover img, .logos a:focus-visible img { filter: none; opacity: 1; }
 /* A supporter shown by name until we have their logo file */
-.logos .logo-text { font-size: 21px; font-weight: 700; letter-spacing: .02em; white-space: nowrap; text-decoration: none; color: var(--ink-2); transition: color .2s; }
-.logos .logo-text:hover, .logos .logo-text:focus-visible { color: var(--ink); }
 @media (max-width: 760px) { .logos { grid-template-columns: repeat(2, 1fr); gap: 32px; } }
 
 .contact-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 32px; margin-top: 48px; }
