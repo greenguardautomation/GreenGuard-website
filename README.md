@@ -47,7 +47,7 @@ Videos in `assets/media/`:
 
 ## Reserve form
 
-GitHub Pages cannot run server code, so the reserve form is sent through [FormSubmit](https://formsubmit.co) to the address in `assets/js/reserve.js`. The very first submission to a new address triggers a one-time activation email from FormSubmit; click the link in it, and later submissions arrive normally.
+GitHub Pages cannot run server code, so the reserve form is sent through [Web3Forms](https://web3forms.com). The access key in `assets/js/reserve.js` belongs to sales@greenguardautomation.com, and every submission is emailed to that address. To send to another inbox, create an access key for it at web3forms.com and replace `ACCESS_KEY`.
 
 ## Local preview
 

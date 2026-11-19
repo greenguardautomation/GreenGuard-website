@@ -1,15 +1,17 @@
 /* Reserve page (reserve.html in English, reserver.html in Danish): live summary and form submission.
-   Submissions are emailed to GreenGuard through FormSubmit (formsubmit.co),
-   because GitHub Pages cannot run server code. To change the receiving inbox,
-   edit RECIPIENT below. The first submission to a new address triggers a
-   one-time activation email from FormSubmit that must be confirmed.
+   Submissions are emailed to GreenGuard through Web3Forms (web3forms.com),
+   because GitHub Pages cannot run server code. The access key below belongs to
+   sales@greenguardautomation.com: every submission is emailed to that address.
+   To change the receiving inbox, create a new access key for the new address at
+   web3forms.com and replace ACCESS_KEY. The key is not a secret; it can only send mail to its own address.
    The page language comes from <html lang="..">: "da" uses the Danish texts. */
 (function () {
   "use strict";
 
-  var RECIPIENT = "sales@greenguardautomation.com"; // an inbox that is read every day; the form service must be activated once for this address
-  var COPY_TO = "btc@greenguardautomation.com"; // gets a copy of every request
-  var ENDPOINT = "https://formsubmit.co/ajax/" + RECIPIENT;
+  var ACCESS_KEY = "be6f4123-881a-4f9c-a0f7-cbb25ee520f3"; // Web3Forms key for sales@greenguardautomation.com
+  var ENDPOINT = "https://api.web3forms.com/submit";
+  var RECIPIENT = "sales@greenguardautomation.com"; // used by the "send it as an email instead" fallback
+  var COPY_TO = "btc@greenguardautomation.com";      // copied on that fallback email
   var MODULE_WIDTH_M = 0.6;      // 60 cm per module
   var HA_MIN_PER_MODULE = 0.06;  // capacity range per module (1–3 km/h over 60 cm), depends on weed pressure
   var HA_MAX_PER_MODULE = 0.18;
@@ -56,7 +58,7 @@
     failed: "Din forespørgsel blev ikke sendt. Prøv igen, eller ",
     missing: "Vi mangler lidt: udfyld felterne markeret med rødt ovenfor.",
     mailInstead: "send den som e-mail i stedet",
-    slow: "Sender… det kan tage op til et minut",
+    slow: "Sender… et øjeblik",
     noAnswer: "Vi fik ikke svar fra formulartjenesten, så din forespørgsel er måske ikke sendt. For at være sikker: ",
     orCall: " eller ring 22 86 23 23",
     none: "Ikke angivet"
@@ -88,7 +90,7 @@
     failed: "Your request wasn't sent. Try again, or ",
     missing: "A few details are missing: fill in the fields marked in red above.",
     mailInstead: "send it as an email instead",
-    slow: "Sending… this can take up to a minute",
+    slow: "Sending… one moment",
     noAnswer: "The form service did not answer, so your request may not have been sent. To be sure: ",
     orCall: " or call +45 22 86 23 23",
     none: "Not specified"
@@ -356,8 +358,6 @@
     var payload = {
       _subject: (offer === "call" ? "Ecoray: ring mig op: " + (data.get("first_name") + " " + data.get("last_name")).trim()
         : (orderNow() ? "Ecoray BESTILLING (" : "Ecoray tilbud (") + (offer === "rent" ? "leje" : offer === "demo" ? "demo" : "køb") + "): " + (data.get("farm") || data.get("last_name"))),
-      _template: "table",
-      _captcha: "false",
       wants: T.offer[offer] + (orderNow() ? " – BESTILLER NU, send aftale til underskrift" : ""),
       modules: data.get("modules"),
       working_width: fmtWidth(n),
@@ -389,14 +389,19 @@
     button.disabled = true;
     button.textContent = T.sending;
 
-    // The form service is sometimes slow. Wait up to a minute, say so after a few seconds, and never hang for ever.
+    // What the form service receives: its own fields first, then every filled-in answer.
+    var body = { access_key: ACCESS_KEY, subject: payload._subject, from_name: DA ? "GreenGuard hjemmeside" : "GreenGuard website" };
+    if (payload._replyto) body.replyto = payload._replyto;
+    Object.keys(payload).forEach(function (k) { if (k.charAt(0) !== "_" && payload[k] !== "") body[k] = payload[k]; });
+
+    // Normally answered within a second. Wait up to 30 seconds, say so after a few, and never hang for ever.
     var ctrl = window.AbortController ? new AbortController() : null;
-    var timer = ctrl ? window.setTimeout(function () { ctrl.abort(); }, 60000) : 0;
+    var timer = ctrl ? window.setTimeout(function () { ctrl.abort(); }, 30000) : 0;
     var slowTimer = window.setTimeout(function () { button.textContent = T.slow; }, 5000);
     fetch(ENDPOINT, {
       method: "POST",
       headers: { "Content-Type": "application/json", "Accept": "application/json" },
-      body: JSON.stringify(payload),
+      body: JSON.stringify(body),
       signal: ctrl ? ctrl.signal : undefined
     })
       .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, body: j }; }); })
@@ -425,7 +430,7 @@
         status.appendChild(link);
         status.appendChild(document.createTextNode((timedOut ? T.orCall : "") + "."));
         // The form service's own explanation, in small print, so the cause can be read off the page.
-        var why = err && err.name === "AbortError" ? "No answer from the form service within 60 seconds." : (err && err.message ? String(err.message) : "");
+        var why = err && err.name === "AbortError" ? "No answer from the form service within 30 seconds." : (err && err.message ? String(err.message) : "");
         if (why) { var small = document.createElement("small"); small.className = "form-why"; small.textContent = why.slice(0, 220); status.appendChild(small); }
         status.scrollIntoView({ block: "center", behavior: "smooth" });
       });
