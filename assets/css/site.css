@@ -409,9 +409,22 @@ p { margin: 0; }
           mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, #000 78%, transparent 100%);
 }
 .order-visual img { width: 100%; height: auto; }
-.order-visual:has(.row-img) { background: radial-gradient(ellipse 60% 55% at 50% 47%, #363c41 0%, var(--soil) 100%); }
+.order-visual:has(.rig), .order-visual:has(.row-img) { background: radial-gradient(ellipse 60% 55% at 50% 47%, #363c41 0%, var(--soil) 100%); }
 .order-visual img.row-img { width: auto; max-width: min(100%, 900px); max-height: 62vh; object-fit: contain; }
 @media (max-width: 980px) { .order-visual img.row-img { max-height: 34vh; } }
+.rig { position: relative; width: 100%; max-width: 980px; height: min(58vh, 560px); perspective: 3200px; touch-action: pan-y; cursor: grab; user-select: none; -webkit-user-select: none; }
+.rig.is-dragging { cursor: grabbing; }
+.rig-stage { position: absolute; left: 50%; top: 50%; width: 0; height: 0; transform-style: preserve-3d; will-change: transform; }
+.rig-face { position: absolute; background-size: 100% 100%; background-color: #33373b; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+.rig-face--front { filter: brightness(var(--lf, 1)); }
+.rig-face--back { filter: brightness(var(--lb, 1)); background-image: linear-gradient(#3b3f44, #2c3034); }
+.rig-face--left { filter: brightness(var(--ll, 1)); }
+.rig-face--right { filter: brightness(var(--lr, 1)); }
+.rig-face--top { background: linear-gradient(135deg, #63686e, #50555a); box-shadow: inset 0 0 0 1px rgba(255,255,255,.07), inset 0 0 0 7px #575c62, inset 0 0 0 8px rgba(0,0,0,.18); }
+.rig-floor { position: absolute; backface-visibility: visible; background: radial-gradient(closest-side, rgba(0,0,0,.6), rgba(0,0,0,.28) 55%, transparent); }
+.rig-turn { width: min(260px, 60%); margin-top: 6px; accent-color: #8fa596; opacity: .75; }
+.rig-hint { font-size: 13px; color: var(--sage); opacity: .7; margin-top: 4px; }
+@media (max-width: 980px) { .rig { height: 40vh; } }
 .choice--two span { padding: 10px 4px; }
 .choice--two small { display: block; font-size: 12px; font-weight: 400; color: var(--ink-2); margin-top: 2px; }
 .order-visual .module-count { margin-top: 12px; font-size: 15px; color: var(--sage); }

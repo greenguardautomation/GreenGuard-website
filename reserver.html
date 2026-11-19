@@ -26,7 +26,7 @@
   <link rel="apple-touch-icon" href="assets/img/brand/GGA_Logo-500.png">
 
   <link rel="preload" href="assets/fonts/archivo-latin-wdth-normal.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="assets/css/site.css?v=cbabacd4">
+  <link rel="stylesheet" href="assets/css/site.css?v=c78c754a">
 </head>
 <body>
 <a class="skip-link" href="#main">Spring til indhold</a>
@@ -129,8 +129,11 @@
 <main id="main" class="order">
 
   <div class="order-visual">
-    <img class="row-img" id="visual-img" src="assets/media/ecoray-row-5.webp?v=2" width="797" height="601" alt="Ecoray med 5 moduler" fetchpriority="high" decoding="async">
+    <div class="rig" id="rig" role="img" aria-label="Ecoray-moduler, kan drejes"><div class="rig-stage" id="rig-stage"></div></div>
+    <noscript><img class="row-img" src="assets/media/ecoray-row-5.webp?v=2" width="797" height="601" alt="Ecoray med 5 moduler" fetchpriority="high" decoding="async"></noscript>
+    <input class="rig-turn" id="rig-turn" type="range" min="-65" max="65" value="-28" step="1" aria-label="Drej maskinen">
     <p class="module-count" id="visual-caption" aria-live="polite">5 moduler, ca. 3 m arbejdsbredde</p>
+    <p class="rig-hint">Træk i maskinen for at dreje den</p>
   </div>
 
   <div class="order-panel">
@@ -142,7 +145,7 @@
       <div class="summary" aria-live="polite" data-detail>
         <div><strong id="sum-width">3 m</strong><span>Arbejdsbredde</span></div>
         <div><strong id="sum-capacity">0,60</strong><span>Hektar i timen, ca.</span></div>
-        <div><strong id="sum-speed">2,4</strong><span>km/t, ca.</span></div>
+        <div><strong id="sum-speed">2</strong><span>km/t, ca.</span></div>
       </div>
       <p class="calc" id="sum-work" data-detail aria-live="polite"></p>
       <p class="calc-note" data-detail>Vejledende tal. Vi regner præcist på din bedrift i tilbuddet.</p>
@@ -174,15 +177,13 @@
         </fieldset>
 
         <fieldset data-detail>
-          <legend>Ukrudt i selve rækken</legend>
-          <p class="hint">Tæl ukrudtsplanterne på 1 meter række, i selve rækken, hvor radrenseren ikke kommer til.</p>
+          <legend>Ukrudtstryk i rækken</legend>
           <div class="choice-row choice-row--3">
-          <label class="choice choice--two"><input type="radio" name="weeds" value="low"><span>Lavt<small>under 10 pr. meter</small></span></label>
-          <label class="choice choice--two"><input type="radio" name="weeds" value="medium" checked><span>Middel<small>10–15 pr. meter</small></span></label>
-          <label class="choice choice--two"><input type="radio" name="weeds" value="high"><span>Højt<small>15–30 pr. meter</small></span></label>
+          <label class="choice"><input type="radio" name="weeds" value="low"><span>Lavt</span></label>
+          <label class="choice"><input type="radio" name="weeds" value="medium" checked><span>Middel</span></label>
+          <label class="choice"><input type="radio" name="weeds" value="high"><span>Højt</span></label>
           </div>
-          <div class="field"><label for="f-weeds">Eller skriv dit eget tal (ukrudt pr. meter række)</label><input id="f-weeds" name="weeds_per_m" type="number" min="0" step="1" inputmode="numeric"></div>
-          <p class="hint hint--below" id="weed-result" aria-live="polite"></p>
+          <p class="hint hint--below">Jo mere ukrudt, jo langsommere kører du. Lavt: ca. 3 km/t. Middel: ca. 2 km/t. Højt: ca. 1 km/t.</p>
         </fieldset>
 
         <fieldset data-detail>
@@ -191,6 +192,8 @@
           <label class="choice"><input type="checkbox" name="crops" value="Gulerødder"><span>Gulerødder</span></label>
           <label class="choice"><input type="checkbox" name="crops" value="Løg"><span>Løg</span></label>
           <label class="choice"><input type="checkbox" name="crops" value="Rødbeder"><span>Rødbeder</span></label>
+          <label class="choice"><input type="checkbox" name="crops" value="Roer"><span>Roer</span></label>
+          <label class="choice"><input type="checkbox" name="crops" value="Spinat"><span>Spinat</span></label>
           <label class="choice"><input type="checkbox" name="crops" value="Nordmannsgran"><span>Nordmannsgran</span></label>
           <label class="choice"><input type="checkbox" name="crops" value="Andet"><span>Andet</span></label>
           </div>
@@ -273,6 +276,6 @@
 </dialog>
 
 <script src="assets/js/site.js?v=2e22545b" defer></script>
-<script src="assets/js/reserve.js?v=a1825111" defer></script>
+<script src="assets/js/reserve.js?v=2fb7a76b" defer></script>
 </body>
 </html>
