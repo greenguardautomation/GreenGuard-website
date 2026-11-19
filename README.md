@@ -47,7 +47,7 @@ Videos in `assets/media/`:
 
 ## Reserve form
 
-GitHub Pages cannot run server code, so the reserve form is sent through [Web3Forms](https://web3forms.com). The access key in `assets/js/reserve.js` belongs to sales@greenguardautomation.com, and every submission is emailed to that address. To send to another inbox, create an access key for it at web3forms.com and replace `ACCESS_KEY`.
+GitHub Pages cannot run server code, so the reserve form is sent through [Web3Forms](https://web3forms.com). Every submission is emailed to the inbox of the Web3Forms account that owns the access key in `assets/js/reserve.js` (the company's shared inbox). To send to another inbox, change it in that Web3Forms account, or create a new access key and replace `ACCESS_KEY`.
 
 ## Local preview
 
