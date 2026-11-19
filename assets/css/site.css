@@ -499,8 +499,15 @@ legend { font-size: 18px; font-weight: 600; margin-bottom: 14px; padding: 0; }
 .field [aria-invalid="true"] { box-shadow: inset 0 0 0 2px var(--danger); }
 .field-error { font-size: 14px; color: var(--danger); margin-top: 6px; }
 
-.price-line { display: flex; justify-content: space-between; margin-top: 32px; font-weight: 500; }
-.price-line span:last-child { color: var(--ink-2); }
+.price-line { display: flex; justify-content: space-between; gap: 14px; align-items: baseline; margin-top: 32px; font-weight: 500; }
+.price-line span:last-child, .price-line s { color: var(--ink-2); white-space: nowrap; }
+.price-line--std { color: var(--ink-2); font-weight: 400; }
+.price-line--std s { text-decoration-thickness: 1.5px; }
+.price-line--std + .price-line--now { margin-top: 6px; }
+.price-line--now { font-size: 19px; font-weight: 600; }
+.price-line--now span:last-child { color: var(--ink); }
+.save-badge { margin-top: 12px; padding: 10px 14px; border-radius: var(--radius); background: var(--forest); color: #fff; font-weight: 600; text-align: center; }
+.only-20 { margin-top: 12px; font-size: 14px; font-weight: 500; }
 .fine { font-size: 13px; color: var(--ink-2); margin-top: 14px; }
 .fine a { text-underline-offset: 2px; }
 .order-panel .btn { width: 100%; margin-top: 20px; padding: 14px 24px; }
