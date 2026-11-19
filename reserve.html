@@ -178,6 +178,15 @@
         </fieldset>
 
         <fieldset data-detail>
+          <legend>Power for the machine</legend>
+          <div class="choice-row choice-row--2">
+          <label class="choice choice--two"><input type="radio" name="generator" value="yes" checked><span>With PTO generator<small id="gen-price"></small></span></label>
+          <label class="choice choice--two"><input type="radio" name="generator" value="no"><span>Own 230 V<small id="gen-none"></small></span></label>
+          </div>
+          <p class="hint hint--below" id="gen-hint" aria-live="polite"></p>
+        </fieldset>
+
+        <fieldset data-detail>
           <legend>Weed pressure in the row</legend>
           <div class="choice-row choice-row--3">
           <label class="choice"><input type="radio" name="weeds" value="low"><span>Low</span></label>
@@ -227,7 +236,7 @@
         </fieldset>
 
         <div class="price-line" data-detail><span id="price-label">Introductory price</span><span id="sum-price">€150,000</span></div>
-        <p class="fine" data-detail>€30,000 per module instead of €37,000 for the first 20 modules ordered by 15 December 2026. Or rent for the 2027 season at €13,500 per module, ordered by 15 December 2026. Excl. VAT and PTO generator. Licence free in 2027, then €5,100 per module a year. 1-year warranty incl. parts, labour and wear parts; service plan free in 2028 for the first 20 modules. 30% on order, the rest on delivery.</p>
+        <p class="fine" data-detail>€30,000 per module instead of €37,000 for the first 20 modules ordered by 15 December 2026. Or rent for the 2027 season at €13,500 per module, ordered by 15 December 2026. Excl. VAT. The PTO generator costs €4,200–12,000 depending on model, or use your own. Licence free in 2027, then €5,100 per module a year. 1-year warranty incl. parts, labour and wear parts; service plan free in 2028 for the first 20 modules. 30% on order, the rest on delivery.</p>
         <p class="fine">Questions? Call Benjamin Tvorup Christensen on <a href="tel:+4522862323">+45 22 86 23 23</a> or email <a href="mailto:sales@greenguardautomation.com">sales@greenguardautomation.com</a>. <a href="assets/greenguard.vcf" download>Save us to your contacts</a>.</p>
         <p class="fine">The quote is free and you are not committed to anything. We use your details only to contact you about Ecoray. See our <a href="privacy.html">privacy policy</a>.</p>
         <label class="tick tick--order" id="order-tick"><input type="checkbox" name="order_now" value="yes"><span>I would like to order now. Send me the agreement to sign.</span></label>
@@ -273,6 +282,6 @@
 </dialog>
 
 <script src="assets/js/site.js?v=2e22545b" defer></script>
-<script src="assets/js/reserve.js?v=af23703b" defer></script>
+<script src="assets/js/reserve.js?v=4076dd52" defer></script>
 </body>
 </html>

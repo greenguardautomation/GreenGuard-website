@@ -14,6 +14,10 @@
   var HA_MAX_PER_MODULE = 0.18;
   var SPEED_KMH = { low: 3, medium: 2, high: 1 }; // driving speed by weed pressure in the row, the brochure's 1–3 km/h
   var DAY_HOURS = 10;
+  // PTO generator by number of modules, and the tractor PTO power each model needs. Same figures as the brochure's price and model tables.
+  var GENERATOR_DKK = { 2: 31500, 3: 39000, 4: 45500, 5: 52000, 6: 60000, 8: 75000, 10: 90000 };
+  var GENERATOR_EUR = { 2: 4200, 3: 5200, 4: 6100, 5: 7000, 6: 8000, 8: 10000, 10: 12000 };
+  var PTO_HP = { 2: 30, 3: 40, 4: 55, 5: 65, 6: 75, 8: 100, 10: 120 };
   var INTRO_PRICE_DKK = 225000;  // per module, first 20 modules ordered by 15 December 2026 (excl. VAT and generator)
   var RENT_PRICE_DKK = 100000;   // per module for the whole 2027 season, ordered by 15 December 2026
   var INTRO_PRICE_EUR = 30000;   // the same offers in euros, as in the English brochure (shown on the English page)
@@ -29,6 +33,9 @@
     emailBad: "Tjek e-mailadressen, den ser ikke færdig ud.",
     sending: "Sender…", submit: "Send mig et tilbud",
     priceBuy: "Intropris", priceRent: "Leje i 2027", priceDemo: "Intropris, hvis du køber",
+    withGen: " inkl. PTO-generator", withoutGen: " uden generator", genNone: "0 kr.", genAsk: "vi regner den med i tilbuddet",
+    genHint: function (hp) { return "Ecoray kører på 230 V fra en PTO-generator. Traktorens PTO skal være godkendt til mindst " + hp + " hk."; },
+    genYes: "Ja, købes med", genNo: "Nej, har egen 230 V",
     offer: { buy: "Køb", rent: "Leje i 2027", demo: "Demo først", call: "Ring mig op" },
     thanks: function (name, email, n) {
       return "Tak, " + name + ". Vi kontakter dig på " + email + " med et tilbud på " + n + (n === "1" ? " modul." : " moduler.");
@@ -51,6 +58,9 @@
     emailBad: "Check the email address, it doesn't look complete.",
     sending: "Sending…", submit: "Get my quote",
     priceBuy: "Introductory price", priceRent: "Rental 2027", priceDemo: "Introductory price if you buy",
+    withGen: " incl. PTO generator", withoutGen: " without generator", genNone: "€0", genAsk: "we include it in the quote",
+    genHint: function (hp) { return "Ecoray runs on 230 V from a PTO generator. The tractor's PTO must be rated for at least " + hp + " hp."; },
+    genYes: "Yes, bought with the machine", genNo: "No, has own 230 V",
     offer: { buy: "Buy", rent: "Rent in 2027", demo: "Demo first", call: "Just call me" },
     thanks: function (name, email, n) {
       return "Thanks, " + name + ". We'll contact you at " + email + " with a quote for " + n + (n === "1" ? " module." : " modules.");
@@ -196,9 +206,16 @@
     var o = form.querySelector('input[name="offer"]:checked');
     return o ? o.value : "buy";
   }
+  function wantsGenerator() {
+    var g = form.querySelector('input[name="generator"]:checked');
+    return !g || g.value === "yes";
+  }
+  function generatorPrice(n) { return (DA ? GENERATOR_DKK : GENERATOR_EUR)[n] || 0; }
+  // Buying: modules at the introductory price, plus the generator when chosen. Renting: the season price per module.
   function fmtPrice(n, offer) {
     var rent = DA ? RENT_PRICE_DKK : RENT_PRICE_EUR, buy = DA ? INTRO_PRICE_DKK : INTRO_PRICE_EUR;
-    return fmtMoney(n * (offer === "rent" ? rent : buy));
+    if (offer === "rent") return fmtMoney(n * rent);
+    return fmtMoney(n * buy + (wantsGenerator() ? generatorPrice(n) : 0));
   }
 
   function updateSummary() {
@@ -218,7 +235,11 @@
       work.textContent = line + ".";
     }
     if (sumPrice) sumPrice.textContent = fmtPrice(n, offer);
-    if (priceLabel) priceLabel.textContent = offer === "rent" ? T.priceRent : (offer === "demo" ? T.priceDemo : T.priceBuy);
+    if (priceLabel) priceLabel.textContent = offer === "rent" ? T.priceRent : (offer === "demo" ? T.priceDemo : T.priceBuy) + (wantsGenerator() ? T.withGen : T.withoutGen);
+    var genPrice = document.getElementById("gen-price"), genNone = document.getElementById("gen-none"), genHint = document.getElementById("gen-hint");
+    if (genPrice) genPrice.textContent = offer === "rent" ? T.genAsk : "+ " + fmtMoney(generatorPrice(n));
+    if (genNone) genNone.textContent = offer === "rent" ? "" : T.genNone;
+    if (genHint) genHint.textContent = T.genHint(PTO_HP[n]);
     caption.textContent = n + (n === 1 ? T.module : T.modules) + num(n * MODULE_WIDTH_M) + T.width;
     // "Just call me": hide everything except the contact details.
     var call = offer === "call";
@@ -240,7 +261,7 @@
     if (daysLeft >= 1) { deadline.textContent = T.daysLeft(daysLeft); deadline.hidden = false; }
   }
   form.addEventListener("change", function (e) {
-    if (["modules", "offer", "weeds", "order_now", "crops"].indexOf(e.target.name) !== -1) updateSummary();
+    if (["modules", "offer", "weeds", "order_now", "crops", "generator"].indexOf(e.target.name) !== -1) updateSummary();
   });
   ["area_ha"].forEach(function (k) {
     form.elements[k].addEventListener("input", updateSummary);
@@ -309,7 +330,8 @@
       working_width: fmtWidth(n),
       weed_pressure_in_row: T.weeds[weedsValue()] + " (ca. " + speedKmh() + " km/t)",
       capacity_ha_per_hour: fmtCapacity(n),
-      price_excl_vat_and_generator: fmtPrice(n, offer),
+      pto_generator: (wantsGenerator() ? T.genYes : T.genNo) + (wantsGenerator() && offer !== "rent" ? " (" + fmtMoney(generatorPrice(n)) + ")" : ""),
+      price_excl_vat: fmtPrice(n, offer) + (offer === "rent" ? "" : (wantsGenerator() ? T.withGen : T.withoutGen)),
       crops: crops.length ? crops.join(", ") : T.none,
       other_crops: form.querySelector('input[name="crops"][data-other]').checked ? (data.get("other_crops") || "") : "",
       farm: data.get("farm") || "",
@@ -325,7 +347,7 @@
       _replyto: data.get("email")
     };
     if (offer === "call") {
-      ["modules", "working_width", "capacity_ha_per_hour", "price_excl_vat_and_generator", "crops", "other_crops", "farm", "row_crop_area_ha", "row_spacing_or_beds", "weed_pressure_in_row", "country"].forEach(function (k) { delete payload[k]; });
+      ["modules", "working_width", "capacity_ha_per_hour", "pto_generator", "price_excl_vat", "crops", "other_crops", "farm", "row_crop_area_ha", "row_spacing_or_beds", "weed_pressure_in_row", "country"].forEach(function (k) { delete payload[k]; });
     }
     if (!payload._replyto) delete payload._replyto;
 
