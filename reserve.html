@@ -27,7 +27,7 @@
   <link rel="apple-touch-icon" href="assets/img/brand/GGA_Logo-500.png">
 
   <link rel="preload" href="assets/fonts/archivo-latin-wdth-normal.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="assets/css/site.css?v=cbabacd4">
+  <link rel="stylesheet" href="assets/css/site.css?v=c78c754a">
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
@@ -130,8 +130,11 @@
 <main id="main" class="order">
 
   <div class="order-visual">
-    <img class="row-img" id="visual-img" src="assets/media/ecoray-row-5.webp?v=2" width="797" height="601" alt="Ecoray with 5 modules" fetchpriority="high" decoding="async">
+    <div class="rig" id="rig" role="img" aria-label="Ecoray modules, can be turned"><div class="rig-stage" id="rig-stage"></div></div>
+    <noscript><img class="row-img" src="assets/media/ecoray-row-5.webp?v=2" width="797" height="601" alt="Ecoray with 5 modules" fetchpriority="high" decoding="async"></noscript>
+    <input class="rig-turn" id="rig-turn" type="range" min="-65" max="65" value="-28" step="1" aria-label="Turn the machine">
     <p class="module-count" id="visual-caption" aria-live="polite">5 modules, about 3 m working width</p>
+    <p class="rig-hint">Drag the machine to turn it</p>
   </div>
 
   <div class="order-panel">
@@ -143,7 +146,7 @@
       <div class="summary" aria-live="polite" data-detail>
         <div><strong id="sum-width">3 m</strong><span>Working width</span></div>
         <div><strong id="sum-capacity">0.60</strong><span>Hectares per hour, approx.</span></div>
-        <div><strong id="sum-speed">2.4</strong><span>km/h, approx.</span></div>
+        <div><strong id="sum-speed">2</strong><span>km/h, approx.</span></div>
       </div>
       <p class="calc" id="sum-work" data-detail aria-live="polite"></p>
       <p class="calc-note" data-detail>Indicative figures. We calculate precisely for your farm in the quote.</p>
@@ -175,15 +178,13 @@
         </fieldset>
 
         <fieldset data-detail>
-          <legend>Weeds in the row itself</legend>
-          <p class="hint">Count the weeds along 1 metre of row, in the row itself, where the hoe cannot reach.</p>
+          <legend>Weed pressure in the row</legend>
           <div class="choice-row choice-row--3">
-          <label class="choice choice--two"><input type="radio" name="weeds" value="low"><span>Low<small>under 10 per metre</small></span></label>
-          <label class="choice choice--two"><input type="radio" name="weeds" value="medium" checked><span>Medium<small>10–15 per metre</small></span></label>
-          <label class="choice choice--two"><input type="radio" name="weeds" value="high"><span>High<small>15–30 per metre</small></span></label>
+          <label class="choice"><input type="radio" name="weeds" value="low"><span>Low</span></label>
+          <label class="choice"><input type="radio" name="weeds" value="medium" checked><span>Medium</span></label>
+          <label class="choice"><input type="radio" name="weeds" value="high"><span>High</span></label>
           </div>
-          <div class="field"><label for="f-weeds">Or enter your own number (weeds per metre of row)</label><input id="f-weeds" name="weeds_per_m" type="number" min="0" step="1" inputmode="numeric"></div>
-          <p class="hint hint--below" id="weed-result" aria-live="polite"></p>
+          <p class="hint hint--below">The more weeds, the slower you drive. Low: approx. 3 km/h. Medium: approx. 2 km/h. High: approx. 1 km/h.</p>
         </fieldset>
 
         <fieldset data-detail>
@@ -191,7 +192,9 @@
           <div class="checks">
           <label class="choice"><input type="checkbox" name="crops" value="Carrots"><span>Carrots</span></label>
           <label class="choice"><input type="checkbox" name="crops" value="Onions"><span>Onions</span></label>
-          <label class="choice"><input type="checkbox" name="crops" value="Beets"><span>Beets</span></label>
+          <label class="choice"><input type="checkbox" name="crops" value="Beetroot"><span>Beetroot</span></label>
+          <label class="choice"><input type="checkbox" name="crops" value="Sugar beet"><span>Sugar beet</span></label>
+          <label class="choice"><input type="checkbox" name="crops" value="Spinach"><span>Spinach</span></label>
           <label class="choice"><input type="checkbox" name="crops" value="Nordmann fir"><span>Nordmann fir</span></label>
           <label class="choice"><input type="checkbox" name="crops" value="Other"><span>Other</span></label>
           </div>
@@ -274,6 +277,6 @@
 </dialog>
 
 <script src="assets/js/site.js?v=2e22545b" defer></script>
-<script src="assets/js/reserve.js?v=a1825111" defer></script>
+<script src="assets/js/reserve.js?v=2fb7a76b" defer></script>
 </body>
 </html>
