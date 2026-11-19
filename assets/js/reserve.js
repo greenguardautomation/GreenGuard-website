@@ -52,7 +52,7 @@
     weeds: { low: "Lavt", medium: "Middel", high: "Højt" },
     perDay: function (ha) { return "Ca. " + ha + " hektar på en arbejdsdag på " + DAY_HOURS + " timer"; },
     perPass: function (area, h) { return "Dine " + area + " ha: ca. " + h + " timer pr. overkørsel"; },
-    orderSubmit: "Send bestilling",
+    orderSubmit: "Send bestilling", titleQuote: "Få et tilbud", titleOrder: "Bestil Ecoray",
     orderThanks: function (name) { return "Tak, " + name + ". Vi sender dig aftalen til underskrift. Bestillingen er først bindende, når aftalen er underskrevet."; },
     daysLeft: function (d) { return d === 1 ? "Sidste dag for introprisen" : "Introprisen gælder " + d + " dage endnu"; },
     failed: "Din forespørgsel blev ikke sendt. Prøv igen, eller ",
@@ -84,7 +84,7 @@
     weeds: { low: "Low", medium: "Medium", high: "High" },
     perDay: function (ha) { return "About " + ha + " hectares in a " + DAY_HOURS + "-hour working day"; },
     perPass: function (area, h) { return "Your " + area + " ha: about " + h + " hours per pass"; },
-    orderSubmit: "Send order",
+    orderSubmit: "Send order", titleQuote: "Get a quote", titleOrder: "Order Ecoray",
     orderThanks: function (name) { return "Thanks, " + name + ". We'll send you the agreement to sign. The order is only binding once the agreement is signed."; },
     daysLeft: function (d) { return d === 1 ? "Last day for the introductory price" : "Introductory price ends in " + d + " days"; },
     failed: "Your request wasn't sent. Try again, or ",
@@ -277,7 +277,25 @@
     var tick = document.getElementById("order-tick");
     if (tick) tick.hidden = !(offer === "buy" || offer === "rent");
     form.querySelector('button[type="submit"]').textContent = submitLabel();
+    // The switch at the top mirrors the order tick at the bottom.
+    var ordering = orderNow(), title = document.getElementById("order-title");
+    if (title) title.textContent = ordering ? T.titleOrder : T.titleQuote;
+    document.querySelectorAll("#mode-switch button").forEach(function (btn) {
+      var on = (btn.getAttribute("data-mode") === "order") === ordering;
+      btn.classList.toggle("is-on", on);
+      btn.setAttribute("aria-pressed", on ? "true" : "false");
+    });
   }
+
+  // "Order now" at the top: ordering means buying or renting, so a demo or call-back choice switches to buying.
+  function setOrderMode(on) {
+    if (on && offerValue() !== "buy" && offerValue() !== "rent") form.querySelector('input[name="offer"][value="buy"]').checked = true;
+    form.elements.order_now.checked = on;
+    updateSummary();
+  }
+  document.querySelectorAll("#mode-switch button").forEach(function (btn) {
+    btn.addEventListener("click", function () { setOrderMode(btn.getAttribute("data-mode") === "order"); });
+  });
 
   // Days left until the order deadline (15 December 2026, Danish time). Hidden after the deadline.
   var deadline = document.getElementById("deadline");
@@ -292,6 +310,7 @@
     form.elements[k].addEventListener("input", updateSummary);
   });
   updateSummary();
+  if (/^#(bestil|order)$/i.test(window.location.hash)) setOrderMode(true);
 
   function setError(input, message) {
     var id = input.id + "-error";
