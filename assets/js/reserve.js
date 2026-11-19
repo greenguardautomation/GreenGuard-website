@@ -7,7 +7,7 @@
 (function () {
   "use strict";
 
-  var RECIPIENT = "contact@greenguardautomation.dk";
+  var RECIPIENT = "btc@greenguardautomation.com"; // an inbox that is read every day; the form service must be activated once for this address
   var ENDPOINT = "https://formsubmit.co/ajax/" + RECIPIENT;
   var MODULE_WIDTH_M = 0.6;      // 60 cm per module
   var HA_MIN_PER_MODULE = 0.06;  // capacity range per module (1–3 km/h over 60 cm), depends on weed pressure
@@ -402,7 +402,7 @@
         done.focus();
         window.scrollTo({ top: 0 });
       })
-      .catch(function () {
+      .catch(function (err) {
         window.clearTimeout(timer);
         button.disabled = false;
         button.textContent = submitLabel();
@@ -415,6 +415,9 @@
         status.textContent = T.failed;
         status.appendChild(link);
         status.appendChild(document.createTextNode("."));
+        // The form service's own explanation, in small print, so the cause can be read off the page.
+        var why = err && err.name === "AbortError" ? "No answer from the form service within 20 seconds." : (err && err.message ? String(err.message) : "");
+        if (why) { var small = document.createElement("small"); small.className = "form-why"; small.textContent = why.slice(0, 220); status.appendChild(small); }
         status.scrollIntoView({ block: "center", behavior: "smooth" });
       });
   });
