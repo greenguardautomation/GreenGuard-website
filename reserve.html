@@ -27,7 +27,7 @@
   <link rel="apple-touch-icon" href="assets/img/brand/GGA_Logo-500.png">
 
   <link rel="preload" href="assets/fonts/archivo-latin-wdth-normal.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="assets/css/site.css?v=0873515f">
+  <link rel="stylesheet" href="assets/css/site.css?v=d32f1e14">
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
@@ -130,7 +130,7 @@
 <main id="main" class="order">
 
   <div class="order-visual">
-    <picture><source type="image/webp" srcset="assets/media/ecoray-side-sm.webp 1200w, assets/media/ecoray-side.webp 2400w" sizes="(max-width: 980px) 100vw, 60vw"><img src="assets/media/ecoray-side.jpg" srcset="assets/media/ecoray-side-sm.jpg 1200w, assets/media/ecoray-side.jpg 2400w" sizes="(max-width: 980px) 100vw, 60vw" alt="Side view of an Ecoray module" fetchpriority="high" decoding="async"></picture>
+    <img class="row-img" id="visual-img" src="assets/media/ecoray-row-5.webp" width="734" height="587" alt="Ecoray with 5 modules" fetchpriority="high" decoding="async">
     <p class="module-count" id="visual-caption" aria-live="polite">5 modules, about 3 m working width</p>
   </div>
 
@@ -143,7 +143,7 @@
       <div class="summary" aria-live="polite" data-detail>
         <div><strong id="sum-width">3 m</strong><span>Working width</span></div>
         <div><strong id="sum-capacity">0.60</strong><span>Hectares per hour, approx.</span></div>
-        <div><strong>15 Mar</strong><span>Delivery</span></div>
+        <div><strong id="sum-speed">2.4</strong><span>km/h, approx.</span></div>
       </div>
       <p class="calc" id="sum-work" data-detail aria-live="polite"></p>
       <p class="calc-note" data-detail>Indicative figures. We calculate precisely for your farm in the quote.</p>
@@ -175,13 +175,15 @@
         </fieldset>
 
         <fieldset data-detail>
-          <legend>Weed pressure in the row</legend>
+          <legend>Weeds in the row itself</legend>
+          <p class="hint">Count the weeds along 1 metre of row, in the row itself, where the hoe cannot reach.</p>
           <div class="choice-row choice-row--3">
-          <label class="choice"><input type="radio" name="weeds" value="low"><span>Low</span></label>
-          <label class="choice"><input type="radio" name="weeds" value="medium" checked><span>Medium</span></label>
-          <label class="choice"><input type="radio" name="weeds" value="high"><span>High</span></label>
+          <label class="choice choice--two"><input type="radio" name="weeds" value="low"><span>Low<small>under 10 per metre</small></span></label>
+          <label class="choice choice--two"><input type="radio" name="weeds" value="medium" checked><span>Medium<small>10–15 per metre</small></span></label>
+          <label class="choice choice--two"><input type="radio" name="weeds" value="high"><span>High<small>15–30 per metre</small></span></label>
           </div>
-          <p class="hint hint--below">The more weeds, the slower you drive. Low: approx. 3 km/h. Medium: approx. 2 km/h. High: approx. 1 km/h.</p>
+          <div class="field"><label for="f-weeds">Or enter your own number (weeds per metre of row)</label><input id="f-weeds" name="weeds_per_m" type="number" min="0" step="1" inputmode="numeric"></div>
+          <p class="hint hint--below" id="weed-result" aria-live="polite"></p>
         </fieldset>
 
         <fieldset data-detail>
@@ -272,6 +274,6 @@
 </dialog>
 
 <script src="assets/js/site.js?v=2e22545b" defer></script>
-<script src="assets/js/reserve.js?v=cae5b1c2" defer></script>
+<script src="assets/js/reserve.js?v=8be76265" defer></script>
 </body>
 </html>
