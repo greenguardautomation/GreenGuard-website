@@ -27,10 +27,14 @@
     emailBad: "Tjek e-mailadressen, den ser ikke færdig ud.",
     sending: "Sender…", submit: "Send mig et tilbud",
     priceBuy: "Intropris", priceRent: "Leje i 2027", priceDemo: "Intropris, hvis du køber",
-    offer: { buy: "Køb", rent: "Leje i 2027", demo: "Demo først" },
+    offer: { buy: "Køb", rent: "Leje i 2027", demo: "Demo først", call: "Ring mig op" },
     thanks: function (name, email, n) {
       return "Tak, " + name + ". Vi kontakter dig på " + email + " med et tilbud på " + n + (n === "1" ? " modul." : " moduler.");
     },
+    contact: "Skriv et telefonnummer eller en e-mail, så vi kan kontakte dig.",
+    callSubmit: "Ring mig op",
+    callThanks: function (name) { return "Tak, " + name + ". Vi kontakter dig hurtigst muligt til en uforpligtende snak."; },
+    daysLeft: function (d) { return d === 1 ? "Sidste dag for introprisen" : "Introprisen gælder " + d + " dage endnu"; },
     failed: "Din forespørgsel blev ikke sendt. Tjek din forbindelse og prøv igen, eller skriv til ",
     none: "Ikke angivet"
   } : {
@@ -40,10 +44,14 @@
     emailBad: "Check the email address, it doesn't look complete.",
     sending: "Sending…", submit: "Get my quote",
     priceBuy: "Introductory price", priceRent: "Rental 2027", priceDemo: "Introductory price if you buy",
-    offer: { buy: "Buy", rent: "Rent in 2027", demo: "Demo first" },
+    offer: { buy: "Buy", rent: "Rent in 2027", demo: "Demo first", call: "Just call me" },
     thanks: function (name, email, n) {
       return "Thanks, " + name + ". We'll contact you at " + email + " with a quote for " + n + (n === "1" ? " module." : " modules.");
     },
+    contact: "Enter a phone number or an email address so we can reach you.",
+    callSubmit: "Call me",
+    callThanks: function (name) { return "Thanks, " + name + ". We'll be in touch as soon as we can, with no commitment."; },
+    daysLeft: function (d) { return d === 1 ? "Last day for the introductory price" : "Introductory price ends in " + d + " days"; },
     failed: "Your request wasn't sent. Check your connection and try again, or email us at ",
     none: "Not specified"
   };
@@ -81,6 +89,19 @@
     if (sumPrice) sumPrice.textContent = fmtPrice(n, offer);
     if (priceLabel) priceLabel.textContent = offer === "rent" ? T.priceRent : (offer === "demo" ? T.priceDemo : T.priceBuy);
     caption.textContent = n + (n === 1 ? T.module : T.modules) + num(n * MODULE_WIDTH_M) + T.width;
+    // "Just call me": hide everything except the contact details.
+    var call = offer === "call";
+    form.parentNode.querySelectorAll("[data-detail]").forEach(function (el) { el.hidden = call; });
+    var hint = document.getElementById("call-hint");
+    if (hint) hint.hidden = !call;
+    form.querySelector('button[type="submit"]').textContent = call ? T.callSubmit : T.submit;
+  }
+
+  // Days left until the order deadline (15 December 2026, Danish time). Hidden after the deadline.
+  var deadline = document.getElementById("deadline");
+  if (deadline) {
+    var daysLeft = Math.ceil((Date.parse("2026-12-15T23:59:59+01:00") - Date.now()) / 86400000);
+    if (daysLeft >= 1) { deadline.textContent = T.daysLeft(daysLeft); deadline.hidden = false; }
   }
   form.addEventListener("change", function (e) {
     if (e.target.name === "modules" || e.target.name === "offer") updateSummary();
@@ -109,10 +130,17 @@
 
   function validate() {
     var first = null;
-    [["f-first", T.first], ["f-last", T.last], ["f-email", T.email]].forEach(function (pair) {
+    var call = offerValue() === "call";
+    var phone = document.getElementById("f-phone");
+    var hasPhone = !!phone.value.trim();
+    // A call-back needs a first name and a phone number or an email. A quote needs full name and email.
+    var rules = call ? [["f-first", T.first], ["f-email", T.contact]] : [["f-first", T.first], ["f-last", T.last], ["f-email", T.email]];
+    setError(document.getElementById("f-last"), "");
+    rules.forEach(function (pair) {
       var input = document.getElementById(pair[0]);
-      var bad = !input.value.trim() || (input.type === "email" && !input.checkValidity());
-      var msg = bad ? (input.type === "email" && input.value.trim() ? T.emailBad : pair[1]) : "";
+      var empty = !input.value.trim();
+      var bad = (empty && !(call && input.type === "email" && hasPhone)) || (!empty && input.type === "email" && !input.checkValidity());
+      var msg = bad ? (input.type === "email" && !empty ? T.emailBad : pair[1]) : "";
       setError(input, msg);
       if (bad && !first) first = input;
     });
@@ -132,7 +160,8 @@
     var n = parseInt(data.get("modules"), 10);
     var offer = offerValue();
     var payload = {
-      _subject: "Ecoray tilbud (" + (offer === "rent" ? "leje" : offer === "demo" ? "demo" : "køb") + "): " + (data.get("farm") || data.get("last_name")),
+      _subject: (offer === "call" ? "Ecoray: ring mig op: " + (data.get("first_name") + " " + data.get("last_name")).trim()
+        : "Ecoray tilbud (" + (offer === "rent" ? "leje" : offer === "demo" ? "demo" : "køb") + "): " + (data.get("farm") || data.get("last_name"))),
       _template: "table",
       _captcha: "false",
       wants: T.offer[offer],
@@ -143,15 +172,22 @@
       crops: crops.length ? crops.join(", ") : T.none,
       farm: data.get("farm") || "",
       row_crop_area_ha: data.get("area_ha") || "",
+      growing: data.get("growing") || "",
       row_spacing_cm: data.get("row_spacing_cm") || "",
+      track_width_cm: data.get("track_width_cm") || "",
       country: data.get("country"),
-      name: data.get("first_name") + " " + data.get("last_name"),
+      name: (data.get("first_name") + " " + data.get("last_name")).trim(),
       email: data.get("email"),
       phone: data.get("phone") || "",
       message: data.get("message") || "",
+      keep_me_updated: data.get("updates") ? "Ja" : "Nej",
       page_language: DA ? "Dansk" : "English",
       _replyto: data.get("email")
     };
+    if (offer === "call") {
+      ["modules", "working_width", "capacity_ha_per_hour", "price_excl_vat_and_generator", "crops", "farm", "row_crop_area_ha", "growing", "row_spacing_cm", "track_width_cm", "country"].forEach(function (k) { delete payload[k]; });
+    }
+    if (!payload._replyto) delete payload._replyto;
 
     var button = form.querySelector('button[type="submit"]');
     button.disabled = true;
@@ -167,14 +203,14 @@
         if (!res.ok || String(res.body.success) !== "true") throw new Error(res.body.message || "Failed");
         document.getElementById("order-form-wrap").hidden = true;
         var done = document.getElementById("order-done");
-        document.getElementById("done-text").textContent = T.thanks(data.get("first_name"), data.get("email"), payload.modules);
+        document.getElementById("done-text").textContent = offer === "call" ? T.callThanks(data.get("first_name")) : T.thanks(data.get("first_name"), data.get("email"), data.get("modules"));
         done.hidden = false;
         done.focus();
         window.scrollTo({ top: 0 });
       })
       .catch(function () {
         button.disabled = false;
-        button.textContent = T.submit;
+        button.textContent = offer === "call" ? T.callSubmit : T.submit;
         status.classList.add("is-error");
         status.innerHTML = T.failed + '<a href="mailto:' + RECIPIENT + '">' + RECIPIENT + "</a>.";
       });

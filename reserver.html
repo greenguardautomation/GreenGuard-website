@@ -26,7 +26,7 @@
   <link rel="apple-touch-icon" href="assets/img/brand/GGA_Logo-500.png">
 
   <link rel="preload" href="assets/fonts/archivo-latin-wdth-normal.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="assets/css/site.css?v=992f622a">
+  <link rel="stylesheet" href="assets/css/site.css?v=f51a8e91">
 </head>
 <body>
 <a class="skip-link" href="#main">Spring til indhold</a>
@@ -137,8 +137,9 @@
     <div id="order-form-wrap">
       <h1>Få et tilbud</h1>
       <p class="sub">Fortæl os om dine marker, så regner vi på en Ecoray til dig. Bestil senest 15. december 2026. Levering senest 15. marts 2027.</p>
+      <p class="deadline" id="deadline" hidden></p>
 
-      <div class="summary" aria-live="polite">
+      <div class="summary" aria-live="polite" data-detail>
         <div><strong id="sum-width">3 m</strong><span>Arbejdsbredde</span></div>
         <div><strong id="sum-capacity">0,30&ndash;0,90</strong><span>Hektar i timen</span></div>
         <div><strong>15. mar.</strong><span>Levering</span></div>
@@ -147,14 +148,16 @@
       <form id="reserve-form" novalidate>
         <fieldset>
           <legend>Jeg vil gerne</legend>
-          <div class="choice-row choice-row--3">
+          <div class="choice-row choice-row--2">
           <label class="choice"><input type="radio" name="offer" value="buy" checked><span>Købe</span></label>
           <label class="choice"><input type="radio" name="offer" value="rent"><span>Leje i 2027</span></label>
           <label class="choice"><input type="radio" name="offer" value="demo"><span>Demo først</span></label>
+          <label class="choice"><input type="radio" name="offer" value="call"><span>Ring mig op</span></label>
           </div>
+          <p class="hint hint--below" id="call-hint" hidden>Skriv dit navn og telefonnummer, så ringer vi til en uforpligtende snak. Du behøver ikke vælge noget endnu.</p>
         </fieldset>
 
-        <fieldset>
+        <fieldset data-detail>
           <legend>Moduler</legend>
           <p class="hint">Hvert modul dækker 60 cm arbejdsbredde. I tvivl? Vælg dit bedste bud, så hjælper vi dig med størrelsen.</p>
           <div class="choice-row choice-row--7">
@@ -168,7 +171,7 @@
           </div>
         </fieldset>
 
-        <fieldset>
+        <fieldset data-detail>
           <legend>Afgrøder</legend>
           <div class="checks">
           <label class="choice"><input type="checkbox" name="crops" value="Gulerødder"><span>Gulerødder</span></label>
@@ -179,12 +182,18 @@
           </div>
         </fieldset>
 
-        <fieldset>
+        <fieldset data-detail>
           <legend>Din bedrift</legend>
           <div class="field"><label for="f-farm">Bedriftens navn</label><input id="f-farm" name="farm" autocomplete="organization"></div>
+          <div class="field"><label for="f-area">Areal med rækkeafgrøder (ha)</label><input id="f-area" name="area_ha" type="number" min="0" step="0.5" inputmode="decimal"></div>
+          <p class="field-label">Sådan dyrker jeg</p>
+          <div class="choice-row choice-row--2">
+          <label class="choice"><input type="radio" name="growing" value="I bede"><span>I bede</span></label>
+          <label class="choice"><input type="radio" name="growing" value="På rækker"><span>På rækker</span></label>
+          </div>
           <div class="field-row">
-            <div class="field"><label for="f-area">Areal med rækkeafgrøder (ha)</label><input id="f-area" name="area_ha" type="number" min="0" step="0.5" inputmode="decimal"></div>
             <div class="field"><label for="f-row">Rækkeafstand (cm)</label><input id="f-row" name="row_spacing_cm" type="number" min="0" step="1" inputmode="numeric"></div>
+            <div class="field"><label for="f-track">Sporvidde ved bede (cm)</label><input id="f-track" name="track_width_cm" type="number" min="0" step="1" inputmode="numeric"></div>
           </div>
           <div class="field"><label for="f-country">Land</label><select id="f-country" name="country" autocomplete="country-name"><option>Danmark</option><option>Sverige</option><option>Norge</option><option>Tyskland</option><option>Holland</option><option>Andet</option></select></div>
         </fieldset>
@@ -198,12 +207,13 @@
           <div class="field"><label for="f-email">E-mail</label><input id="f-email" name="email" type="email" autocomplete="email" required></div>
           <div class="field"><label for="f-phone">Telefon</label><input id="f-phone" name="phone" type="tel" autocomplete="tel"></div>
           <div class="field"><label for="f-msg">Noget, vi skal vide? (valgfrit)</label><textarea id="f-msg" name="message"></textarea></div>
+          <label class="tick"><input type="checkbox" name="updates" value="yes"><span>Hold mig opdateret om GreenGuard på e-mail</span></label>
           <input class="hp" type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true">
         </fieldset>
 
-        <div class="price-line"><span id="price-label">Intropris</span><span id="sum-price">1.125.000 kr.</span></div>
-        <p class="fine">225.000 kr. pr. modul i stedet for 275.000 kr. for de første 20 moduler, der bestilles senest 15. december 2026. Eller lej i sæsonen 2027 for 100.000 kr. pr. modul ved bestilling senest 15. december 2026. Ekskl. moms og PTO-generator. Licens gratis i 2027, derefter 38.000 kr. pr. modul om året. 1 års garanti inkl. dele, arbejdstid og sliddele; serviceaftalen er gratis i 2028 for de første 20 moduler. 30 % ved bestilling, resten ved levering.</p>
-        <p class="fine">Spørgsmål? Ring til Benjamin Tvorup Christensen på <a href="tel:+4522862323">22 86 23 23</a> eller skriv til <a href="mailto:sales@greenguardautomation.com">sales@greenguardautomation.com</a>.</p>
+        <div class="price-line" data-detail><span id="price-label">Intropris</span><span id="sum-price">1.125.000 kr.</span></div>
+        <p class="fine" data-detail>225.000 kr. pr. modul i stedet for 275.000 kr. for de første 20 moduler, der bestilles senest 15. december 2026. Eller lej i sæsonen 2027 for 100.000 kr. pr. modul ved bestilling senest 15. december 2026. Ekskl. moms og PTO-generator. Licens gratis i 2027, derefter 38.000 kr. pr. modul om året. 1 års garanti inkl. dele, arbejdstid og sliddele; serviceaftalen er gratis i 2028 for de første 20 moduler. 30 % ved bestilling, resten ved levering.</p>
+        <p class="fine">Spørgsmål? Ring til Benjamin Tvorup Christensen på <a href="tel:+4522862323">22 86 23 23</a> eller skriv til <a href="mailto:sales@greenguardautomation.com">sales@greenguardautomation.com</a>. <a href="assets/greenguard.vcf" download>Gem os i dine kontakter</a>.</p>
         <p class="fine">Tilbuddet er gratis og uforpligtende. Vi bruger kun dine oplysninger til at kontakte dig om Ecoray. Se vores <a href="privacy.html">privatlivspolitik</a>.</p>
         <button class="btn btn--primary" type="submit">Send mig et tilbud</button>
         <p class="form-status" id="form-status" role="status"></p>
@@ -213,6 +223,7 @@
     <div class="done" id="order-done" hidden tabindex="-1">
       <h2>Tak for din forespørgsel</h2>
       <p id="done-text">Vi kontakter dig med et tilbud til din bedrift.</p>
+      <p class="fine"><a href="assets/greenguard.vcf" download>Gem os i dine kontakter</a></p>
       <div class="btn-row" style="margin-top:28px"><a class="btn btn--outline" href="da/ecoray.html">Tilbage til Ecoray</a></div>
     </div>
   </div>
@@ -245,7 +256,7 @@
   <video controls playsinline preload="none"></video>
 </dialog>
 
-<script src="assets/js/site.js?v=c9418922" defer></script>
-<script src="assets/js/reserve.js?v=69fae41a" defer></script>
+<script src="assets/js/site.js?v=2e22545b" defer></script>
+<script src="assets/js/reserve.js?v=33ebc3b2" defer></script>
 </body>
 </html>
