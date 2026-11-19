@@ -26,7 +26,7 @@
   <link rel="apple-touch-icon" href="assets/img/brand/GGA_Logo-500.png">
 
   <link rel="preload" href="assets/fonts/archivo-latin-wdth-normal.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="assets/css/site.css?v=f51a8e91">
+  <link rel="stylesheet" href="assets/css/site.css?v=0873515f">
 </head>
 <body>
 <a class="skip-link" href="#main">Spring til indhold</a>
@@ -141,9 +141,11 @@
 
       <div class="summary" aria-live="polite" data-detail>
         <div><strong id="sum-width">3 m</strong><span>Arbejdsbredde</span></div>
-        <div><strong id="sum-capacity">0,30&ndash;0,90</strong><span>Hektar i timen</span></div>
+        <div><strong id="sum-capacity">0,60</strong><span>Hektar i timen, ca.</span></div>
         <div><strong>15. mar.</strong><span>Levering</span></div>
       </div>
+      <p class="calc" id="sum-work" data-detail aria-live="polite"></p>
+      <p class="calc-note" data-detail>Vejledende tal. Vi regner præcist på din bedrift i tilbuddet.</p>
 
       <form id="reserve-form" novalidate>
         <fieldset>
@@ -172,6 +174,16 @@
         </fieldset>
 
         <fieldset data-detail>
+          <legend>Ukrudtstryk i rækken</legend>
+          <div class="choice-row choice-row--3">
+          <label class="choice"><input type="radio" name="weeds" value="low"><span>Lavt</span></label>
+          <label class="choice"><input type="radio" name="weeds" value="medium" checked><span>Middel</span></label>
+          <label class="choice"><input type="radio" name="weeds" value="high"><span>Højt</span></label>
+          </div>
+          <p class="hint hint--below">Jo mere ukrudt, jo langsommere kører du. Lavt: ca. 3 km/t. Middel: ca. 2 km/t. Højt: ca. 1 km/t.</p>
+        </fieldset>
+
+        <fieldset data-detail>
           <legend>Afgrøder</legend>
           <div class="checks">
           <label class="choice"><input type="checkbox" name="crops" value="Gulerødder"><span>Gulerødder</span></label>
@@ -188,12 +200,13 @@
           <div class="field"><label for="f-area">Areal med rækkeafgrøder (ha)</label><input id="f-area" name="area_ha" type="number" min="0" step="0.5" inputmode="decimal"></div>
           <p class="field-label">Sådan dyrker jeg</p>
           <div class="choice-row choice-row--2">
-          <label class="choice"><input type="radio" name="growing" value="I bede"><span>I bede</span></label>
-          <label class="choice"><input type="radio" name="growing" value="På rækker"><span>På rækker</span></label>
+          <label class="choice"><input type="radio" name="growing" value="I bede" data-grow="beds" checked><span>I bede</span></label>
+          <label class="choice"><input type="radio" name="growing" value="På rækker" data-grow="rows"><span>På rækker</span></label>
           </div>
           <div class="field-row">
-            <div class="field"><label for="f-row">Rækkeafstand (cm)</label><input id="f-row" name="row_spacing_cm" type="number" min="0" step="1" inputmode="numeric"></div>
-            <div class="field"><label for="f-track">Sporvidde ved bede (cm)</label><input id="f-track" name="track_width_cm" type="number" min="0" step="1" inputmode="numeric"></div>
+            <div class="field" data-for="beds"><label for="f-track">Sporvidde (cm)</label><input id="f-track" name="track_width_cm" type="number" min="0" step="1" inputmode="numeric"></div>
+            <div class="field" data-for="beds"><label for="f-perbed">Rækker pr. bed</label><input id="f-perbed" name="rows_per_bed" type="number" min="1" step="1" inputmode="numeric"></div>
+            <div class="field" data-for="rows"><label for="f-row">Rækkeafstand (cm)</label><input id="f-row" name="row_spacing_cm" type="number" min="0" step="1" inputmode="numeric"></div>
           </div>
           <div class="field"><label for="f-country">Land</label><select id="f-country" name="country" autocomplete="country-name"><option>Danmark</option><option>Sverige</option><option>Norge</option><option>Tyskland</option><option>Holland</option><option>Andet</option></select></div>
         </fieldset>
@@ -215,6 +228,7 @@
         <p class="fine" data-detail>225.000 kr. pr. modul i stedet for 275.000 kr. for de første 20 moduler, der bestilles senest 15. december 2026. Eller lej i sæsonen 2027 for 100.000 kr. pr. modul ved bestilling senest 15. december 2026. Ekskl. moms og PTO-generator. Licens gratis i 2027, derefter 38.000 kr. pr. modul om året. 1 års garanti inkl. dele, arbejdstid og sliddele; serviceaftalen er gratis i 2028 for de første 20 moduler. 30 % ved bestilling, resten ved levering.</p>
         <p class="fine">Spørgsmål? Ring til Benjamin Tvorup Christensen på <a href="tel:+4522862323">22 86 23 23</a> eller skriv til <a href="mailto:sales@greenguardautomation.com">sales@greenguardautomation.com</a>. <a href="assets/greenguard.vcf" download>Gem os i dine kontakter</a>.</p>
         <p class="fine">Tilbuddet er gratis og uforpligtende. Vi bruger kun dine oplysninger til at kontakte dig om Ecoray. Se vores <a href="privacy.html">privatlivspolitik</a>.</p>
+        <label class="tick tick--order" id="order-tick"><input type="checkbox" name="order_now" value="yes"><span>Jeg vil gerne bestille nu. Send mig aftalen til underskrift.</span></label>
         <button class="btn btn--primary" type="submit">Send mig et tilbud</button>
         <p class="form-status" id="form-status" role="status"></p>
       </form>
@@ -257,6 +271,6 @@
 </dialog>
 
 <script src="assets/js/site.js?v=2e22545b" defer></script>
-<script src="assets/js/reserve.js?v=33ebc3b2" defer></script>
+<script src="assets/js/reserve.js?v=cae5b1c2" defer></script>
 </body>
 </html>
