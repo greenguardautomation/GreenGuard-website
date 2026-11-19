@@ -409,6 +409,7 @@ p { margin: 0; }
           mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, #000 78%, transparent 100%);
 }
 .order-visual img { width: 100%; height: auto; }
+.order-visual:has(.row-img) { background: radial-gradient(ellipse 60% 55% at 50% 47%, #363c41 0%, var(--soil) 100%); }
 .order-visual img.row-img { width: auto; max-width: min(100%, 900px); max-height: 62vh; object-fit: contain; }
 @media (max-width: 980px) { .order-visual img.row-img { max-height: 34vh; } }
 .choice--two span { padding: 10px 4px; }

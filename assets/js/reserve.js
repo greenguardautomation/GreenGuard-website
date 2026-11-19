@@ -147,7 +147,7 @@
     var weedResult = document.getElementById("weed-result");
     if (weedResult) weedResult.textContent = T.speedLine(num(speedKmh()), num(weedsPerMetre()), num(rowsPerModule())) + (neededKmh() < MIN_KMH - 0.05 ? T.tooMany : "");
     var img = document.getElementById("visual-img");
-    if (img) { var src = "assets/media/ecoray-row-" + n + ".webp"; if (img.getAttribute("src") !== src) { img.removeAttribute("width"); img.removeAttribute("height"); img.src = src; } }
+    if (img) { var src = "assets/media/ecoray-row-" + n + ".webp?v=2"; if (img.getAttribute("src") !== src) { img.removeAttribute("width"); img.removeAttribute("height"); img.src = src; } }
     var work = document.getElementById("sum-work");
     if (work) {
       var cap = capacity(n), area = parseFloat(form.elements.area_ha.value);
