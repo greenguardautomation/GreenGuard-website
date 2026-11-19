@@ -56,6 +56,9 @@
     failed: "Din forespørgsel blev ikke sendt. Prøv igen, eller ",
     missing: "Vi mangler lidt: udfyld felterne markeret med rødt ovenfor.",
     mailInstead: "send den som e-mail i stedet",
+    slow: "Sender… det kan tage op til et minut",
+    noAnswer: "Vi fik ikke svar fra formulartjenesten, så din forespørgsel er måske ikke sendt. For at være sikker: ",
+    orCall: " eller ring 22 86 23 23",
     none: "Ikke angivet"
   } : {
     module: " module, about ", modules: " modules, about ", width: " m working width",
@@ -85,6 +88,9 @@
     failed: "Your request wasn't sent. Try again, or ",
     missing: "A few details are missing: fill in the fields marked in red above.",
     mailInstead: "send it as an email instead",
+    slow: "Sending… this can take up to a minute",
+    noAnswer: "The form service did not answer, so your request may not have been sent. To be sure: ",
+    orCall: " or call +45 22 86 23 23",
     none: "Not specified"
   };
 
@@ -384,9 +390,10 @@
     button.disabled = true;
     button.textContent = T.sending;
 
-    // Give up after 20 seconds instead of leaving the button on "Sending…" for ever.
+    // The form service is sometimes slow. Wait up to a minute, say so after a few seconds, and never hang for ever.
     var ctrl = window.AbortController ? new AbortController() : null;
-    var timer = ctrl ? window.setTimeout(function () { ctrl.abort(); }, 20000) : 0;
+    var timer = ctrl ? window.setTimeout(function () { ctrl.abort(); }, 60000) : 0;
+    var slowTimer = window.setTimeout(function () { button.textContent = T.slow; }, 5000);
     fetch(ENDPOINT, {
       method: "POST",
       headers: { "Content-Type": "application/json", "Accept": "application/json" },
@@ -395,7 +402,7 @@
     })
       .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, body: j }; }); })
       .then(function (res) {
-        window.clearTimeout(timer);
+        window.clearTimeout(timer); window.clearTimeout(slowTimer);
         if (!res.ok || String(res.body.success) !== "true") throw new Error(res.body.message || "Failed");
         document.getElementById("order-form-wrap").hidden = true;
         var done = document.getElementById("order-done");
@@ -405,7 +412,8 @@
         window.scrollTo({ top: 0 });
       })
       .catch(function (err) {
-        window.clearTimeout(timer);
+        window.clearTimeout(timer); window.clearTimeout(slowTimer);
+        var timedOut = !!err && err.name === "AbortError";
         button.disabled = false;
         button.textContent = submitLabel();
         // The request is never lost: the same details can go as an ordinary email from the visitor's own mail program.
@@ -414,11 +422,11 @@
         link.href = "mailto:" + RECIPIENT + "?cc=" + COPY_TO + "&subject=" + encodeURIComponent(payload._subject) + "&body=" + encodeURIComponent(lines.join("\n"));
         link.textContent = T.mailInstead;
         status.classList.add("is-error");
-        status.textContent = T.failed;
+        status.textContent = timedOut ? T.noAnswer : T.failed;
         status.appendChild(link);
-        status.appendChild(document.createTextNode("."));
+        status.appendChild(document.createTextNode((timedOut ? T.orCall : "") + "."));
         // The form service's own explanation, in small print, so the cause can be read off the page.
-        var why = err && err.name === "AbortError" ? "No answer from the form service within 20 seconds." : (err && err.message ? String(err.message) : "");
+        var why = err && err.name === "AbortError" ? "No answer from the form service within 60 seconds." : (err && err.message ? String(err.message) : "");
         if (why) { var small = document.createElement("small"); small.className = "form-why"; small.textContent = why.slice(0, 220); status.appendChild(small); }
         status.scrollIntoView({ block: "center", behavior: "smooth" });
       });
