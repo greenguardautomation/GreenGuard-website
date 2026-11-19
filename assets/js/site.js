@@ -79,6 +79,37 @@
     });
   }
 
+  // Launch offer: a slim bar with the days left until the order deadline (15 December 2026, Danish time).
+  // It disappears by itself after the deadline. Not shown on the quote pages, which carry the deadline already.
+  (function () {
+    var end = Date.parse("2026-12-15T23:59:59+01:00");
+    var days = Math.ceil((end - Date.now()) / 86400000);
+    var cta = document.querySelector('.nav a.btn[href*="reserve"]');
+    if (days < 1 || !cta || document.getElementById("reserve-form")) return;
+    try { if (sessionStorage.getItem("gg-offer-closed")) return; } catch (e) {}
+    var da = (document.documentElement.lang || "").toLowerCase().indexOf("da") === 0;
+    var left = da ? (days === 1 ? "Sidste dag" : days + " dage tilbage") : (days === 1 ? "Last day" : days + " days left");
+    var bar = document.createElement("div");
+    bar.className = "offer-bar";
+    var text = document.createElement("span");
+    text.textContent = (da ? "Introtilbud på de første 20 moduler: spar 50.000 kr. pr. modul. " : "Launch offer on the first 20 modules: save €7,000 per module. ") + left + ".";
+    var link = document.createElement("a");
+    link.href = cta.href;
+    link.textContent = da ? "Få et tilbud" : "Get a quote";
+    var x = document.createElement("button");
+    x.type = "button";
+    x.setAttribute("aria-label", da ? "Luk" : "Close");
+    x.textContent = "\u00d7";
+    x.addEventListener("click", function () {
+      bar.remove();
+      document.body.style.paddingBottom = "";
+      try { sessionStorage.setItem("gg-offer-closed", "1"); } catch (e) {}
+    });
+    bar.appendChild(text); bar.appendChild(link); bar.appendChild(x);
+    document.body.appendChild(bar);
+    document.body.style.paddingBottom = bar.offsetHeight + "px";
+  })();
+
   // Current year in footer
   document.querySelectorAll("[data-year]").forEach(function (el) {
     el.textContent = new Date().getFullYear();
