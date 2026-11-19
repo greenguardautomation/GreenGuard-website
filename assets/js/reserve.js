@@ -182,10 +182,6 @@
     var w = form.querySelector('input[name="weeds"]:checked');
     return w ? w.value : "medium";
   }
-  function growMode() {
-    var g = form.querySelector('input[name="growing"]:checked');
-    return g ? g.getAttribute("data-grow") : "beds";
-  }
   function speedKmh() { return SPEED_KMH[weedsValue()]; }
   // Hectares per hour = working width (m) x speed (km/h) / 10.
   function capacity(n) { return n * MODULE_WIDTH_M * speedKmh() / 10; }
@@ -221,9 +217,6 @@
       if (area > 0) line += ". " + T.perPass(num(area), Math.round(area / cap));
       work.textContent = line + ".";
     }
-    // Beds or rows: show only the fields that fit.
-    var grow = growMode();
-    form.querySelectorAll("[data-for]").forEach(function (el) { el.hidden = el.getAttribute("data-for") !== grow; });
     if (sumPrice) sumPrice.textContent = fmtPrice(n, offer);
     if (priceLabel) priceLabel.textContent = offer === "rent" ? T.priceRent : (offer === "demo" ? T.priceDemo : T.priceBuy);
     caption.textContent = n + (n === 1 ? T.module : T.modules) + num(n * MODULE_WIDTH_M) + T.width;
@@ -247,7 +240,7 @@
     if (daysLeft >= 1) { deadline.textContent = T.daysLeft(daysLeft); deadline.hidden = false; }
   }
   form.addEventListener("change", function (e) {
-    if (["modules", "offer", "weeds", "growing", "order_now", "crops"].indexOf(e.target.name) !== -1) updateSummary();
+    if (["modules", "offer", "weeds", "order_now", "crops"].indexOf(e.target.name) !== -1) updateSummary();
   });
   ["area_ha"].forEach(function (k) {
     form.elements[k].addEventListener("input", updateSummary);
@@ -305,8 +298,6 @@
     var crops = data.getAll("crops");
     var n = parseInt(data.get("modules"), 10);
     var offer = offerValue();
-    var growEl = form.querySelector('input[name="growing"]:checked');
-    var isRows = !!growEl && growEl.getAttribute("data-grow") === "rows";
     var ordering = orderNow();
     var payload = {
       _subject: (offer === "call" ? "Ecoray: ring mig op: " + (data.get("first_name") + " " + data.get("last_name")).trim()
@@ -323,10 +314,7 @@
       other_crops: form.querySelector('input[name="crops"][data-other]').checked ? (data.get("other_crops") || "") : "",
       farm: data.get("farm") || "",
       row_crop_area_ha: data.get("area_ha") || "",
-      growing: data.get("growing") || "",
-      row_spacing_cm: isRows ? (data.get("row_spacing_cm") || "") : "",
-      track_width_cm: isRows ? "" : (data.get("track_width_cm") || ""),
-      rows_per_bed: isRows ? "" : (data.get("rows_per_bed") || ""),
+      row_spacing_or_beds: data.get("row_layout") || "",
       country: data.get("country"),
       name: (data.get("first_name") + " " + data.get("last_name")).trim(),
       email: data.get("email"),
@@ -337,7 +325,7 @@
       _replyto: data.get("email")
     };
     if (offer === "call") {
-      ["modules", "working_width", "capacity_ha_per_hour", "price_excl_vat_and_generator", "crops", "other_crops", "farm", "row_crop_area_ha", "growing", "row_spacing_cm", "track_width_cm", "rows_per_bed", "weed_pressure_in_row", "country"].forEach(function (k) { delete payload[k]; });
+      ["modules", "working_width", "capacity_ha_per_hour", "price_excl_vat_and_generator", "crops", "other_crops", "farm", "row_crop_area_ha", "row_spacing_or_beds", "weed_pressure_in_row", "country"].forEach(function (k) { delete payload[k]; });
     }
     if (!payload._replyto) delete payload._replyto;
 
