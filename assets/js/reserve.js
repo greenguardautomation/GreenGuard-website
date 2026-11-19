@@ -20,6 +20,7 @@
   var PTO_HP = { 2: 30, 3: 40, 4: 55, 5: 65, 6: 75, 8: 100, 10: 120 };
   var INTRO_PRICE_DKK = 225000;  // per module, first 20 modules ordered by 15 December 2026 (excl. VAT and generator)
   var RENT_PRICE_DKK = 100000;   // per module for the whole 2027 season, ordered by 15 December 2026
+  var STD_PRICE_DKK = 275000, STD_PRICE_EUR = 37000; // standard price per module, as in the brochure
   var INTRO_PRICE_EUR = 30000;   // the same offers in euros, as in the English brochure (shown on the English page)
   var RENT_PRICE_EUR = 13500;
 
@@ -36,6 +37,8 @@
     withGen: " inkl. PTO-generator", withoutGen: " uden generator", genNone: "0 kr.", genAsk: "vi regner den med i tilbuddet",
     genHint: function (hp) { return "Ecoray kører på 230 V fra en PTO-generator. Traktorens PTO skal være godkendt til mindst " + hp + " hk."; },
     genYes: "Ja, købes med", genNo: "Nej, har egen 230 V",
+    save: function (x) { return "Du sparer " + x; },
+    left: function (d) { return d === 1 ? "Sidste dag for introprisen · kun de første 20 moduler" : "Introprisen gælder " + d + " dage endnu · kun de første 20 moduler"; },
     offer: { buy: "Køb", rent: "Leje i 2027", demo: "Demo først", call: "Ring mig op" },
     thanks: function (name, email, n) {
       return "Tak, " + name + ". Vi kontakter dig på " + email + " med et tilbud på " + n + (n === "1" ? " modul." : " moduler.");
@@ -61,6 +64,8 @@
     withGen: " incl. PTO generator", withoutGen: " without generator", genNone: "€0", genAsk: "we include it in the quote",
     genHint: function (hp) { return "Ecoray runs on 230 V from a PTO generator. The tractor's PTO must be rated for at least " + hp + " hp."; },
     genYes: "Yes, bought with the machine", genNo: "No, has own 230 V",
+    save: function (x) { return "You save " + x; },
+    left: function (d) { return d === 1 ? "Last day for the introductory price · first 20 modules only" : "Introductory price ends in " + d + " days · first 20 modules only"; },
     offer: { buy: "Buy", rent: "Rent in 2027", demo: "Demo first", call: "Just call me" },
     thanks: function (name, email, n) {
       return "Thanks, " + name + ". We'll contact you at " + email + " with a quote for " + n + (n === "1" ? " module." : " modules.");
@@ -236,6 +241,12 @@
     }
     if (sumPrice) sumPrice.textContent = fmtPrice(n, offer);
     if (priceLabel) priceLabel.textContent = offer === "rent" ? T.priceRent : (offer === "demo" ? T.priceDemo : T.priceBuy) + (wantsGenerator() ? T.withGen : T.withoutGen);
+    // Standard price struck through, and what the introductory price saves. Not shown for rental.
+    var stdUnit = DA ? STD_PRICE_DKK : STD_PRICE_EUR, introUnit = DA ? INTRO_PRICE_DKK : INTRO_PRICE_EUR, renting = offer === "rent";
+    var stdLine = document.getElementById("std-line"), stdPrice = document.getElementById("std-price"), badge = document.getElementById("save-badge"), only = document.getElementById("only-20");
+    if (stdPrice) stdPrice.textContent = fmtMoney(n * stdUnit + (wantsGenerator() ? generatorPrice(n) : 0));
+    if (badge) badge.textContent = T.save(fmtMoney(n * (stdUnit - introUnit)));
+    [stdLine, badge, only].forEach(function (el) { if (el) el.hidden = renting || offer === "call"; });
     var genPrice = document.getElementById("gen-price"), genNone = document.getElementById("gen-none"), genHint = document.getElementById("gen-hint");
     if (genPrice) genPrice.textContent = offer === "rent" ? T.genAsk : "+ " + fmtMoney(generatorPrice(n));
     if (genNone) genNone.textContent = offer === "rent" ? "" : T.genNone;
@@ -258,7 +269,7 @@
   var deadline = document.getElementById("deadline");
   if (deadline) {
     var daysLeft = Math.ceil((Date.parse("2026-12-15T23:59:59+01:00") - Date.now()) / 86400000);
-    if (daysLeft >= 1) { deadline.textContent = T.daysLeft(daysLeft); deadline.hidden = false; }
+    if (daysLeft >= 1) { deadline.textContent = T.left(daysLeft); deadline.hidden = false; }
   }
   form.addEventListener("change", function (e) {
     if (["modules", "offer", "weeds", "order_now", "crops", "generator"].indexOf(e.target.name) !== -1) updateSummary();
@@ -331,6 +342,7 @@
       weed_pressure_in_row: T.weeds[weedsValue()] + " (ca. " + speedKmh() + " km/t)",
       capacity_ha_per_hour: fmtCapacity(n),
       pto_generator: (wantsGenerator() ? T.genYes : T.genNo) + (wantsGenerator() && offer !== "rent" ? " (" + fmtMoney(generatorPrice(n)) + ")" : ""),
+      saving_vs_standard_price: offer === "rent" ? "" : fmtMoney(n * ((DA ? STD_PRICE_DKK : STD_PRICE_EUR) - (DA ? INTRO_PRICE_DKK : INTRO_PRICE_EUR))),
       price_excl_vat: fmtPrice(n, offer) + (offer === "rent" ? "" : (wantsGenerator() ? T.withGen : T.withoutGen)),
       crops: crops.length ? crops.join(", ") : T.none,
       other_crops: form.querySelector('input[name="crops"][data-other]').checked ? (data.get("other_crops") || "") : "",
@@ -347,7 +359,7 @@
       _replyto: data.get("email")
     };
     if (offer === "call") {
-      ["modules", "working_width", "capacity_ha_per_hour", "pto_generator", "price_excl_vat", "crops", "other_crops", "farm", "row_crop_area_ha", "row_spacing_or_beds", "weed_pressure_in_row", "country"].forEach(function (k) { delete payload[k]; });
+      ["modules", "working_width", "capacity_ha_per_hour", "pto_generator", "saving_vs_standard_price", "price_excl_vat", "crops", "other_crops", "farm", "row_crop_area_ha", "row_spacing_or_beds", "weed_pressure_in_row", "country"].forEach(function (k) { delete payload[k]; });
     }
     if (!payload._replyto) delete payload._replyto;
 
