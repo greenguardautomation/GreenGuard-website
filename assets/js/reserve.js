@@ -8,6 +8,7 @@
   "use strict";
 
   var RECIPIENT = "sales@greenguardautomation.com"; // an inbox that is read every day; the form service must be activated once for this address
+  var COPY_TO = "btc@greenguardautomation.com"; // gets a copy of every request
   var ENDPOINT = "https://formsubmit.co/ajax/" + RECIPIENT;
   var MODULE_WIDTH_M = 0.6;      // 60 cm per module
   var HA_MIN_PER_MODULE = 0.06;  // capacity range per module (1–3 km/h over 60 cm), depends on weed pressure
@@ -350,6 +351,7 @@
       _subject: (offer === "call" ? "Ecoray: ring mig op: " + (data.get("first_name") + " " + data.get("last_name")).trim()
         : (orderNow() ? "Ecoray BESTILLING (" : "Ecoray tilbud (") + (offer === "rent" ? "leje" : offer === "demo" ? "demo" : "køb") + "): " + (data.get("farm") || data.get("last_name"))),
       _template: "table",
+      _cc: COPY_TO,
       _captcha: "false",
       wants: T.offer[offer] + (orderNow() ? " – BESTILLER NU, send aftale til underskrift" : ""),
       modules: data.get("modules"),
@@ -409,7 +411,7 @@
         // The request is never lost: the same details can go as an ordinary email from the visitor's own mail program.
         var lines = Object.keys(payload).filter(function (k) { return k.charAt(0) !== "_" && payload[k] !== ""; }).map(function (k) { return k.replace(/_/g, " ") + ": " + payload[k]; });
         var link = document.createElement("a");
-        link.href = "mailto:" + RECIPIENT + "?subject=" + encodeURIComponent(payload._subject) + "&body=" + encodeURIComponent(lines.join("\n"));
+        link.href = "mailto:" + RECIPIENT + "?cc=" + COPY_TO + "&subject=" + encodeURIComponent(payload._subject) + "&body=" + encodeURIComponent(lines.join("\n"));
         link.textContent = T.mailInstead;
         status.classList.add("is-error");
         status.textContent = T.failed;
