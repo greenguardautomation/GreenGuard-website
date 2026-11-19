@@ -177,6 +177,15 @@
         </fieldset>
 
         <fieldset data-detail>
+          <legend>Strøm til maskinen</legend>
+          <div class="choice-row choice-row--2">
+          <label class="choice choice--two"><input type="radio" name="generator" value="yes" checked><span>Med PTO-generator<small id="gen-price"></small></span></label>
+          <label class="choice choice--two"><input type="radio" name="generator" value="no"><span>Egen 230 V<small id="gen-none"></small></span></label>
+          </div>
+          <p class="hint hint--below" id="gen-hint" aria-live="polite"></p>
+        </fieldset>
+
+        <fieldset data-detail>
           <legend>Ukrudtstryk i rækken</legend>
           <div class="choice-row choice-row--3">
           <label class="choice"><input type="radio" name="weeds" value="low"><span>Lavt</span></label>
@@ -226,7 +235,7 @@
         </fieldset>
 
         <div class="price-line" data-detail><span id="price-label">Intropris</span><span id="sum-price">1.125.000 kr.</span></div>
-        <p class="fine" data-detail>225.000 kr. pr. modul i stedet for 275.000 kr. for de første 20 moduler, der bestilles senest 15. december 2026. Eller lej i sæsonen 2027 for 100.000 kr. pr. modul ved bestilling senest 15. december 2026. Ekskl. moms og PTO-generator. Licens gratis i 2027, derefter 38.000 kr. pr. modul om året. 1 års garanti inkl. dele, arbejdstid og sliddele; serviceaftalen er gratis i 2028 for de første 20 moduler. 30 % ved bestilling, resten ved levering.</p>
+        <p class="fine" data-detail>225.000 kr. pr. modul i stedet for 275.000 kr. for de første 20 moduler, der bestilles senest 15. december 2026. Eller lej i sæsonen 2027 for 100.000 kr. pr. modul ved bestilling senest 15. december 2026. Ekskl. moms. PTO-generatoren koster 31.500–90.000 kr. efter model, eller brug din egen. Licens gratis i 2027, derefter 38.000 kr. pr. modul om året. 1 års garanti inkl. dele, arbejdstid og sliddele; serviceaftalen er gratis i 2028 for de første 20 moduler. 30 % ved bestilling, resten ved levering.</p>
         <p class="fine">Spørgsmål? Ring til Benjamin Tvorup Christensen på <a href="tel:+4522862323">22 86 23 23</a> eller skriv til <a href="mailto:sales@greenguardautomation.com">sales@greenguardautomation.com</a>. <a href="assets/greenguard.vcf" download>Gem os i dine kontakter</a>.</p>
         <p class="fine">Tilbuddet er gratis og uforpligtende. Vi bruger kun dine oplysninger til at kontakte dig om Ecoray. Se vores <a href="privacy.html">privatlivspolitik</a>.</p>
         <label class="tick tick--order" id="order-tick"><input type="checkbox" name="order_now" value="yes"><span>Jeg vil gerne bestille nu. Send mig aftalen til underskrift.</span></label>
@@ -272,6 +281,6 @@
 </dialog>
 
 <script src="assets/js/site.js?v=2e22545b" defer></script>
-<script src="assets/js/reserve.js?v=af23703b" defer></script>
+<script src="assets/js/reserve.js?v=4076dd52" defer></script>
 </body>
 </html>
