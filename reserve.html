@@ -27,7 +27,7 @@
   <link rel="apple-touch-icon" href="assets/img/brand/GGA_Logo-500.png">
 
   <link rel="preload" href="assets/fonts/archivo-latin-wdth-normal.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="assets/css/site.css?v=f51a8e91">
+  <link rel="stylesheet" href="assets/css/site.css?v=0873515f">
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
@@ -142,9 +142,11 @@
 
       <div class="summary" aria-live="polite" data-detail>
         <div><strong id="sum-width">3 m</strong><span>Working width</span></div>
-        <div><strong id="sum-capacity">0.30&ndash;0.90</strong><span>Hectares per hour</span></div>
+        <div><strong id="sum-capacity">0.60</strong><span>Hectares per hour, approx.</span></div>
         <div><strong>15 Mar</strong><span>Delivery</span></div>
       </div>
+      <p class="calc" id="sum-work" data-detail aria-live="polite"></p>
+      <p class="calc-note" data-detail>Indicative figures. We calculate precisely for your farm in the quote.</p>
 
       <form id="reserve-form" novalidate>
         <fieldset>
@@ -173,6 +175,16 @@
         </fieldset>
 
         <fieldset data-detail>
+          <legend>Weed pressure in the row</legend>
+          <div class="choice-row choice-row--3">
+          <label class="choice"><input type="radio" name="weeds" value="low"><span>Low</span></label>
+          <label class="choice"><input type="radio" name="weeds" value="medium" checked><span>Medium</span></label>
+          <label class="choice"><input type="radio" name="weeds" value="high"><span>High</span></label>
+          </div>
+          <p class="hint hint--below">The more weeds, the slower you drive. Low: approx. 3 km/h. Medium: approx. 2 km/h. High: approx. 1 km/h.</p>
+        </fieldset>
+
+        <fieldset data-detail>
           <legend>Crops</legend>
           <div class="checks">
           <label class="choice"><input type="checkbox" name="crops" value="Carrots"><span>Carrots</span></label>
@@ -189,12 +201,13 @@
           <div class="field"><label for="f-area">Row-crop area (ha)</label><input id="f-area" name="area_ha" type="number" min="0" step="0.5" inputmode="decimal"></div>
           <p class="field-label">How I grow</p>
           <div class="choice-row choice-row--2">
-          <label class="choice"><input type="radio" name="growing" value="In beds"><span>In beds</span></label>
-          <label class="choice"><input type="radio" name="growing" value="In rows"><span>In rows</span></label>
+          <label class="choice"><input type="radio" name="growing" value="In beds" data-grow="beds" checked><span>In beds</span></label>
+          <label class="choice"><input type="radio" name="growing" value="In rows" data-grow="rows"><span>In rows</span></label>
           </div>
           <div class="field-row">
-            <div class="field"><label for="f-row">Row spacing (cm)</label><input id="f-row" name="row_spacing_cm" type="number" min="0" step="1" inputmode="numeric"></div>
-            <div class="field"><label for="f-track">Track width for beds (cm)</label><input id="f-track" name="track_width_cm" type="number" min="0" step="1" inputmode="numeric"></div>
+            <div class="field" data-for="beds"><label for="f-track">Track width (cm)</label><input id="f-track" name="track_width_cm" type="number" min="0" step="1" inputmode="numeric"></div>
+            <div class="field" data-for="beds"><label for="f-perbed">Rows per bed</label><input id="f-perbed" name="rows_per_bed" type="number" min="1" step="1" inputmode="numeric"></div>
+            <div class="field" data-for="rows"><label for="f-row">Row spacing (cm)</label><input id="f-row" name="row_spacing_cm" type="number" min="0" step="1" inputmode="numeric"></div>
           </div>
           <div class="field"><label for="f-country">Country</label><select id="f-country" name="country" autocomplete="country-name"><option>Denmark</option><option>Sweden</option><option>Norway</option><option>Germany</option><option>Netherlands</option><option>Other</option></select></div>
         </fieldset>
@@ -216,6 +229,7 @@
         <p class="fine" data-detail>€30,000 per module instead of €37,000 for the first 20 modules ordered by 15 December 2026. Or rent for the 2027 season at €13,500 per module, ordered by 15 December 2026. Excl. VAT and PTO generator. Licence free in 2027, then €5,100 per module a year. 1-year warranty incl. parts, labour and wear parts; service plan free in 2028 for the first 20 modules. 30% on order, the rest on delivery.</p>
         <p class="fine">Questions? Call Benjamin Tvorup Christensen on <a href="tel:+4522862323">+45 22 86 23 23</a> or email <a href="mailto:sales@greenguardautomation.com">sales@greenguardautomation.com</a>. <a href="assets/greenguard.vcf" download>Save us to your contacts</a>.</p>
         <p class="fine">The quote is free and you are not committed to anything. We use your details only to contact you about Ecoray. See our <a href="privacy.html">privacy policy</a>.</p>
+        <label class="tick tick--order" id="order-tick"><input type="checkbox" name="order_now" value="yes"><span>I would like to order now. Send me the agreement to sign.</span></label>
         <button class="btn btn--primary" type="submit">Get my quote</button>
         <p class="form-status" id="form-status" role="status"></p>
       </form>
@@ -258,6 +272,6 @@
 </dialog>
 
 <script src="assets/js/site.js?v=2e22545b" defer></script>
-<script src="assets/js/reserve.js?v=33ebc3b2" defer></script>
+<script src="assets/js/reserve.js?v=cae5b1c2" defer></script>
 </body>
 </html>
