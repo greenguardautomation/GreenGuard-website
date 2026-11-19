@@ -52,7 +52,9 @@
     orderSubmit: "Send bestilling",
     orderThanks: function (name) { return "Tak, " + name + ". Vi sender dig aftalen til underskrift. Bestillingen er først bindende, når aftalen er underskrevet."; },
     daysLeft: function (d) { return d === 1 ? "Sidste dag for introprisen" : "Introprisen gælder " + d + " dage endnu"; },
-    failed: "Din forespørgsel blev ikke sendt. Tjek din forbindelse og prøv igen, eller skriv til ",
+    failed: "Din forespørgsel blev ikke sendt. Prøv igen, eller ",
+    missing: "Vi mangler lidt: udfyld felterne markeret med rødt ovenfor.",
+    mailInstead: "send den som e-mail i stedet",
     none: "Ikke angivet"
   } : {
     module: " module, about ", modules: " modules, about ", width: " m working width",
@@ -79,7 +81,9 @@
     orderSubmit: "Send order",
     orderThanks: function (name) { return "Thanks, " + name + ". We'll send you the agreement to sign. The order is only binding once the agreement is signed."; },
     daysLeft: function (d) { return d === 1 ? "Last day for the introductory price" : "Introductory price ends in " + d + " days"; },
-    failed: "Your request wasn't sent. Check your connection and try again, or email us at ",
+    failed: "Your request wasn't sent. Try again, or ",
+    missing: "A few details are missing: fill in the fields marked in red above.",
+    mailInstead: "send it as an email instead",
     none: "Not specified"
   };
 
@@ -189,6 +193,7 @@
   var sumPrice = document.getElementById("sum-price");
   var priceLabel = document.getElementById("price-label");
   var status = document.getElementById("form-status");
+  var LOADED_AT = Date.now();
 
   function num(x) { return DA ? x.toFixed(1).replace(/\.0$/, "").replace(".", ",") : x.toFixed(1).replace(/\.0$/, ""); }
   function fmtWidth(n) { return num(n * MODULE_WIDTH_M) + " m"; }
@@ -315,7 +320,10 @@
       setError(input, msg);
       if (bad && !first) first = input;
     });
-    if (first) first.focus();
+    if (first) {
+      first.focus({ preventScroll: true });
+      first.scrollIntoView({ block: "center", behavior: "smooth" });
+    }
     return !first;
   }
 
@@ -323,8 +331,15 @@
     e.preventDefault();
     status.textContent = "";
     status.classList.remove("is-error");
-    if (!validate()) return;
-    if (form.elements._honey.value) return; // spam bot
+    if (!validate()) {
+      // Say it next to the button too, so a press never looks like nothing happened.
+      status.classList.add("is-error");
+      status.textContent = T.missing;
+      return;
+    }
+    // Spam bots fill the hidden field within moments of loading the page. A browser's autofill can fill it too,
+    // so a filled field only stops the form when it is also sent implausibly fast.
+    if (form.elements._honey.value && Date.now() - LOADED_AT < 4000) return;
 
     var data = new FormData(form);
     var crops = data.getAll("crops");
@@ -367,13 +382,18 @@
     button.disabled = true;
     button.textContent = T.sending;
 
+    // Give up after 20 seconds instead of leaving the button on "Sending…" for ever.
+    var ctrl = window.AbortController ? new AbortController() : null;
+    var timer = ctrl ? window.setTimeout(function () { ctrl.abort(); }, 20000) : 0;
     fetch(ENDPOINT, {
       method: "POST",
       headers: { "Content-Type": "application/json", "Accept": "application/json" },
-      body: JSON.stringify(payload)
+      body: JSON.stringify(payload),
+      signal: ctrl ? ctrl.signal : undefined
     })
       .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, body: j }; }); })
       .then(function (res) {
+        window.clearTimeout(timer);
         if (!res.ok || String(res.body.success) !== "true") throw new Error(res.body.message || "Failed");
         document.getElementById("order-form-wrap").hidden = true;
         var done = document.getElementById("order-done");
@@ -383,10 +403,19 @@
         window.scrollTo({ top: 0 });
       })
       .catch(function () {
+        window.clearTimeout(timer);
         button.disabled = false;
         button.textContent = submitLabel();
+        // The request is never lost: the same details can go as an ordinary email from the visitor's own mail program.
+        var lines = Object.keys(payload).filter(function (k) { return k.charAt(0) !== "_" && payload[k] !== ""; }).map(function (k) { return k.replace(/_/g, " ") + ": " + payload[k]; });
+        var link = document.createElement("a");
+        link.href = "mailto:" + RECIPIENT + "?subject=" + encodeURIComponent(payload._subject) + "&body=" + encodeURIComponent(lines.join("\n"));
+        link.textContent = T.mailInstead;
         status.classList.add("is-error");
-        status.innerHTML = T.failed + '<a href="mailto:' + RECIPIENT + '">' + RECIPIENT + "</a>.";
+        status.textContent = T.failed;
+        status.appendChild(link);
+        status.appendChild(document.createTextNode("."));
+        status.scrollIntoView({ block: "center", behavior: "smooth" });
       });
   });
 })();
