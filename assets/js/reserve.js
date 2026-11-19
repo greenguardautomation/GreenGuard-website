@@ -7,7 +7,7 @@
 (function () {
   "use strict";
 
-  var RECIPIENT = "btc@greenguardautomation.com"; // an inbox that is read every day; the form service must be activated once for this address
+  var RECIPIENT = "sales@greenguardautomation.com"; // an inbox that is read every day; the form service must be activated once for this address
   var ENDPOINT = "https://formsubmit.co/ajax/" + RECIPIENT;
   var MODULE_WIDTH_M = 0.6;      // 60 cm per module
   var HA_MIN_PER_MODULE = 0.06;  // capacity range per module (1–3 km/h over 60 cm), depends on weed pressure
