@@ -409,6 +409,10 @@ p { margin: 0; }
           mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, #000 78%, transparent 100%);
 }
 .order-visual img { width: 100%; height: auto; }
+.order-visual img.row-img { width: auto; max-width: min(100%, 900px); max-height: 62vh; object-fit: contain; }
+@media (max-width: 980px) { .order-visual img.row-img { max-height: 34vh; } }
+.choice--two span { padding: 10px 4px; }
+.choice--two small { display: block; font-size: 12px; font-weight: 400; color: var(--ink-2); margin-top: 2px; }
 .order-visual .module-count { margin-top: 12px; font-size: 15px; color: var(--sage); }
 .order-panel { padding: 48px 40px 80px; }
 .order-panel h1 { font-size: 40px; font-variation-settings: var(--wide); text-align: center; }
