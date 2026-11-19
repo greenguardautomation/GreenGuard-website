@@ -232,6 +232,9 @@
     form.parentNode.querySelectorAll("[data-detail]").forEach(function (el) { el.hidden = call; });
     var hint = document.getElementById("call-hint");
     if (hint) hint.hidden = !call;
+    // "Other" crop: room to write which ones.
+    var otherBox = form.querySelector('input[name="crops"][data-other]'), otherField = document.getElementById("other-crops");
+    if (otherBox && otherField) otherField.hidden = !otherBox.checked;
     var tick = document.getElementById("order-tick");
     if (tick) tick.hidden = !(offer === "buy" || offer === "rent");
     form.querySelector('button[type="submit"]').textContent = submitLabel();
@@ -244,7 +247,7 @@
     if (daysLeft >= 1) { deadline.textContent = T.daysLeft(daysLeft); deadline.hidden = false; }
   }
   form.addEventListener("change", function (e) {
-    if (["modules", "offer", "weeds", "growing", "order_now"].indexOf(e.target.name) !== -1) updateSummary();
+    if (["modules", "offer", "weeds", "growing", "order_now", "crops"].indexOf(e.target.name) !== -1) updateSummary();
   });
   ["area_ha"].forEach(function (k) {
     form.elements[k].addEventListener("input", updateSummary);
@@ -317,6 +320,7 @@
       capacity_ha_per_hour: fmtCapacity(n),
       price_excl_vat_and_generator: fmtPrice(n, offer),
       crops: crops.length ? crops.join(", ") : T.none,
+      other_crops: form.querySelector('input[name="crops"][data-other]').checked ? (data.get("other_crops") || "") : "",
       farm: data.get("farm") || "",
       row_crop_area_ha: data.get("area_ha") || "",
       growing: data.get("growing") || "",
@@ -333,7 +337,7 @@
       _replyto: data.get("email")
     };
     if (offer === "call") {
-      ["modules", "working_width", "capacity_ha_per_hour", "price_excl_vat_and_generator", "crops", "farm", "row_crop_area_ha", "growing", "row_spacing_cm", "track_width_cm", "rows_per_bed", "weed_pressure_in_row", "country"].forEach(function (k) { delete payload[k]; });
+      ["modules", "working_width", "capacity_ha_per_hour", "price_excl_vat_and_generator", "crops", "other_crops", "farm", "row_crop_area_ha", "growing", "row_spacing_cm", "track_width_cm", "rows_per_bed", "weed_pressure_in_row", "country"].forEach(function (k) { delete payload[k]; });
     }
     if (!payload._replyto) delete payload._replyto;
 
