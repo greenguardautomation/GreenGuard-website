@@ -27,7 +27,7 @@
   <link rel="apple-touch-icon" href="assets/img/brand/GGA_Logo-500.png">
 
   <link rel="preload" href="assets/fonts/archivo-latin-wdth-normal.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="assets/css/site.css?v=846fe100">
+  <link rel="stylesheet" href="assets/css/site.css?v=02aed439">
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
@@ -188,14 +188,17 @@
         </fieldset>
 
         <fieldset data-detail>
-          <legend>Crops</legend>
+          <legend>What do you grow?</legend>
           <div class="checks">
           <label class="choice"><input type="checkbox" name="crops" value="Carrots"><span>Carrots</span></label>
           <label class="choice"><input type="checkbox" name="crops" value="Onions"><span>Onions</span></label>
           <label class="choice"><input type="checkbox" name="crops" value="Beetroot"><span>Beetroot</span></label>
           <label class="choice"><input type="checkbox" name="crops" value="Sugar beet"><span>Sugar beet</span></label>
-          <label class="choice"><input type="checkbox" name="crops" value="Spinach"><span>Spinach</span></label>
-          <label class="choice"><input type="checkbox" name="crops" value="Nordmann fir"><span>Nordmann fir</span></label>
+          <label class="choice"><input type="checkbox" name="crops" value="Spinach and other seed crops"><span>Spinach and other seed crops</span></label>
+          <label class="choice"><input type="checkbox" name="crops" value="Cabbage, lettuce and leeks"><span>Cabbage, lettuce and leeks</span></label>
+          <label class="choice"><input type="checkbox" name="crops" value="Maize"><span>Maize</span></label>
+          <label class="choice"><input type="checkbox" name="crops" value="Rapeseed and faba beans"><span>Rapeseed and faba beans</span></label>
+          <label class="choice"><input type="checkbox" name="crops" value="Christmas trees and nursery"><span>Christmas trees and nursery</span></label>
           <label class="choice"><input type="checkbox" name="crops" value="Other root vegetables"><span>Other root vegetables</span></label>
           <label class="choice"><input type="checkbox" name="crops" value="Other" data-other><span>Other</span></label>
           </div>
@@ -206,16 +209,7 @@
           <legend>Your farm</legend>
           <div class="field"><label for="f-farm">Farm name</label><input id="f-farm" name="farm" autocomplete="organization"></div>
           <div class="field"><label for="f-area">Row-crop area (ha)</label><input id="f-area" name="area_ha" type="number" min="0" step="0.5" inputmode="decimal"></div>
-          <p class="field-label">How I grow</p>
-          <div class="choice-row choice-row--2">
-          <label class="choice"><input type="radio" name="growing" value="In beds" data-grow="beds" checked><span>In beds</span></label>
-          <label class="choice"><input type="radio" name="growing" value="In rows" data-grow="rows"><span>In rows</span></label>
-          </div>
-          <div class="field-row">
-            <div class="field" data-for="beds"><label for="f-track">Track width (cm)</label><input id="f-track" name="track_width_cm" type="number" min="0" step="1" inputmode="numeric"></div>
-            <div class="field" data-for="beds"><label for="f-perbed">Rows per bed</label><input id="f-perbed" name="rows_per_bed" type="number" min="1" step="1" inputmode="numeric"></div>
-            <div class="field" data-for="rows"><label for="f-row">Row spacing (cm)</label><input id="f-row" name="row_spacing_cm" type="number" min="0" step="1" inputmode="numeric"></div>
-          </div>
+          <div class="field"><label for="f-layout">Row spacing or bed system (optional)</label><input id="f-layout" name="row_layout" placeholder="E.g. carrots in 1.8 m beds, beet at 50 cm" autocomplete="off"></div>
           <div class="field"><label for="f-country">Country</label><select id="f-country" name="country" autocomplete="country-name"><option>Denmark</option><option>Sweden</option><option>Norway</option><option>Germany</option><option>Netherlands</option><option>Other</option></select></div>
         </fieldset>
 
@@ -279,6 +273,6 @@
 </dialog>
 
 <script src="assets/js/site.js?v=2e22545b" defer></script>
-<script src="assets/js/reserve.js?v=67addc91" defer></script>
+<script src="assets/js/reserve.js?v=af23703b" defer></script>
 </body>
 </html>
