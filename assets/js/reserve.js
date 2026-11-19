@@ -73,30 +73,33 @@
 
   // The machine in the visual: plain boxes drawn with CSS 3D, one per module. Drag or use the slider to turn it.
   window.ggRig = (function () {
-    var rig = document.getElementById("rig"), stage = document.getElementById("rig-stage"), slider = document.getElementById("rig-turn");
+    var rig = document.getElementById("rig"), stage = document.getElementById("rig-stage");
     if (!rig || !stage) return null;
-    var W = 100, H = 192, D = 100, GAP = 3, LIFT = 46, TILT = -17, MAX = 65;
-    var n = 0, angle = -28, scale = 1, touched = false;
+    var buttons = document.querySelectorAll(".rig-views button");
+    var W = 100, H = 192, D = 100, GAP = 3, LIFT = 46;
+    var VIEWS = { front: [-28, -17], back: [152, -17], under: [-12, 66] }; // turn, tilt in degrees
+    var n = 0, turn = -28, tilt = -17, scale = 1, touched = false, floor = null, anim = 0;
     function face(cls, w, h, tf, img) {
       var el = document.createElement("div");
       el.className = "rig-face rig-face--" + cls;
-      el.style.cssText = "width:" + w + "px;height:" + h + "px;left:" + (-w / 2) + "px;top:" + (-h / 2) + "px;transform:" + tf + ";" + (img ? "background-image:url(assets/media/" + img + "?v=2)" : "");
+      el.style.cssText = "width:" + w + "px;height:" + h + "px;left:" + (-w / 2) + "px;top:" + (-h / 2) + "px;transform:" + tf + ";" + (img ? "background-image:url(assets/media/" + img + "?v=4)" : "");
       stage.appendChild(el);
     }
     function build() {
       stage.textContent = "";
       var total = n * W + (n - 1) * GAP, y = -LIFT / 2;
-      var floor = document.createElement("div");
+      floor = document.createElement("div");
       floor.className = "rig-floor";
       var fw = total + 150, fd = D + 170;
       floor.style.cssText = "width:" + fw + "px;height:" + fd + "px;left:" + (-fw / 2) + "px;top:" + (-fd / 2) + "px;transform:translate3d(0," + (y + H / 2 + LIFT) + "px,0) rotateX(90deg)";
       stage.appendChild(floor);
       for (var i = 0; i < n; i++) {
         var x = (i - (n - 1) / 2) * (W + GAP);
-        face("back", W, H, "translate3d(" + x + "px," + y + "px," + (-D / 2) + "px) rotateY(180deg)");
+        face("back", W, H, "translate3d(" + x + "px," + y + "px," + (-D / 2) + "px) rotateY(180deg)", "module-back.webp");
         face("left", D, H, "translate3d(" + (x - W / 2) + "px," + y + "px,0) rotateY(-90deg)", "module-side.webp");
         face("right", D, H, "translate3d(" + (x + W / 2) + "px," + y + "px,0) rotateY(90deg)", "module-side.webp");
         face("top", W, D, "translate3d(" + x + "px," + (y - H / 2) + "px,0) rotateX(90deg)");
+        face("under", W, D, "translate3d(" + x + "px," + (y + H / 2) + "px,0) rotateX(-90deg)", "module-under.webp");
         face("front", W, H, "translate3d(" + x + "px," + y + "px," + (D / 2) + "px)", "module-front.webp");
       }
       fit();
@@ -106,32 +109,58 @@
       scale = Math.min(rig.clientWidth * 0.9 / (total + 70), rig.clientHeight * 0.86 / (H + LIFT + 110), 2.3);
       render();
     }
-    function light(deg) { // matte shading: how much a wall facing `deg` catches a light from the upper left front
-      var d = Math.cos((deg + 32) * Math.PI / 180);
-      return (0.62 + 0.62 * Math.max(0, d)).toFixed(3);
+    // Matte shading: how much a face with normal (x, y, z) catches a light from the upper left front, after turn and tilt.
+    function light(x, y, z) {
+      var a = turn * Math.PI / 180, b = tilt * Math.PI / 180;
+      var x1 = x * Math.cos(a) + z * Math.sin(a), z1 = -x * Math.sin(a) + z * Math.cos(a);
+      var y2 = y * Math.cos(b) - z1 * Math.sin(b), z2 = y * Math.sin(b) + z1 * Math.cos(b);
+      var d = x1 * -0.36 + y2 * -0.56 + z2 * 0.75;
+      return (0.6 + 0.66 * Math.max(0, d)).toFixed(3);
     }
     function render() {
-      stage.style.transform = "scale(" + scale.toFixed(4) + ") rotateX(" + TILT + "deg) rotateY(" + angle.toFixed(2) + "deg)";
-      rig.style.setProperty("--lf", light(angle));
-      rig.style.setProperty("--lr", light(angle + 90));
-      rig.style.setProperty("--ll", light(angle - 90));
-      rig.style.setProperty("--lb", light(angle + 180));
-      if (slider && document.activeElement !== slider) slider.value = Math.round(angle);
+      stage.style.transform = "scale(" + scale.toFixed(4) + ") rotateX(" + tilt.toFixed(2) + "deg) rotateY(" + turn.toFixed(2) + "deg)";
+      rig.style.setProperty("--lf", light(0, 0, 1));
+      rig.style.setProperty("--lb", light(0, 0, -1));
+      rig.style.setProperty("--lr", light(1, 0, 0));
+      rig.style.setProperty("--ll", light(-1, 0, 0));
+      rig.style.setProperty("--lt", light(0, -1, 0));
+      rig.style.setProperty("--lu", (1.15 * light(0, 1, 0)).toFixed(3));
+      if (floor) floor.style.opacity = Math.max(0, Math.min(1, -tilt / 12)); // no shadow in the way when seen from below
     }
-    function set(a) { angle = Math.max(-MAX, Math.min(MAX, a)); render(); }
-    var startX = null, startA = 0;
-    rig.addEventListener("pointerdown", function (e) { touched = true; startX = e.clientX; startA = angle; rig.classList.add("is-dragging"); try { rig.setPointerCapture(e.pointerId); } catch (err) {} });
-    rig.addEventListener("pointermove", function (e) { if (startX !== null) set(startA + (e.clientX - startX) * 0.45); });
-    ["pointerup", "pointercancel"].forEach(function (ev) { rig.addEventListener(ev, function () { startX = null; rig.classList.remove("is-dragging"); }); });
-    if (slider) slider.addEventListener("input", function () { touched = true; set(parseFloat(slider.value)); });
+    function set(a, b) { turn = a; tilt = Math.max(-70, Math.min(80, b)); render(); }
+    function mark(name) { buttons.forEach(function (btn) { btn.classList.toggle("is-on", btn.getAttribute("data-view") === name); }); }
+    function go(name) { // glide to a named view, the short way round
+      var v = VIEWS[name], from = [turn, tilt], t0 = null, id = ++anim;
+      var dt = ((v[0] - turn) % 360 + 540) % 360 - 180;
+      mark(name);
+      if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) { set(from[0] + dt, v[1]); return; }
+      var step = function (ts) {
+        if (id !== anim) return;
+        if (t0 === null) t0 = ts;
+        var k = Math.min(1, (ts - t0) / 700), e = k < 0.5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2;
+        set(from[0] + dt * e, from[1] + (v[1] - from[1]) * e);
+        if (k < 1) window.requestAnimationFrame(step);
+      };
+      window.requestAnimationFrame(step);
+    }
+    var start = null;
+    rig.addEventListener("pointerdown", function (e) { touched = true; anim++; start = { x: e.clientX, y: e.clientY, turn: turn, tilt: tilt, mouse: e.pointerType === "mouse" }; rig.classList.add("is-dragging"); try { rig.setPointerCapture(e.pointerId); } catch (err) {} });
+    rig.addEventListener("pointermove", function (e) {
+      if (!start) return;
+      // Sideways turns it. Up and down tilts it with a mouse; on a touch screen that gesture scrolls the page, so the buttons do the tilting.
+      set(start.turn + (e.clientX - start.x) * 0.45, start.mouse ? start.tilt + (e.clientY - start.y) * 0.4 : start.tilt);
+      mark("");
+    });
+    ["pointerup", "pointercancel"].forEach(function (ev) { rig.addEventListener(ev, function () { start = null; rig.classList.remove("is-dragging"); }); });
+    buttons.forEach(function (btn) { btn.addEventListener("click", function () { touched = true; go(btn.getAttribute("data-view")); }); });
     window.addEventListener("resize", fit);
     // A slow sway until the visitor takes over, unless they prefer reduced motion.
     if (!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches)) {
-      var t0 = null;
+      var s0 = null;
       var sway = function (ts) {
         if (touched) return;
-        if (t0 === null) t0 = ts;
-        set(-28 + 16 * Math.sin((ts - t0) / 2600));
+        if (s0 === null) s0 = ts;
+        set(-28 + 16 * Math.sin((ts - s0) / 2600), -17);
         window.requestAnimationFrame(sway);
       };
       window.requestAnimationFrame(sway);
