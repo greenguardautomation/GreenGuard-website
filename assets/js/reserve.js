@@ -227,6 +227,20 @@
     var o = form.querySelector('input[name="offer"]:checked');
     return o ? o.value : "buy";
   }
+  // Where the visitor came from: a ?kilde= tag on the link (the QR code adds one), else the page that linked here.
+  function leadSource() {
+    var tag = "";
+    try { var q = new URLSearchParams(window.location.search); tag = q.get("kilde") || q.get("src") || q.get("utm_source") || ""; } catch (e) {}
+    try { if (tag) sessionStorage.setItem("gg-kilde", tag); else tag = sessionStorage.getItem("gg-kilde") || ""; } catch (e) {}
+    var known = { qr: "QR-kode (brochure eller flyer)", agromek: "Agromek-standen", mail: "Link i e-mail", linkedin: "LinkedIn" };
+    if (tag) return known[tag.toLowerCase()] || tag.slice(0, 60);
+    var ref = document.referrer;
+    if (!ref) return "Direkte (adressen skrevet selv eller åbnet fra en app)";
+    try {
+      var u = new URL(ref), host = u.hostname.replace(/^www\./, "");
+      return host === "greenguardautomation.com" ? "Hjemmesiden, fra siden " + u.pathname : host;
+    } catch (e) { return ref.slice(0, 80); }
+  }
   function wantsGenerator() {
     var g = form.querySelector('input[name="generator"]:checked');
     return !g || g.value === "yes";
@@ -376,34 +390,53 @@
     var n = parseInt(data.get("modules"), 10);
     var offer = offerValue();
     var ordering = orderNow();
+    // The mail GreenGuard receives. Danish labels, the person first, then what they want, then the farm.
+    // The order of the keys is the order of the lines in the mail.
+    var name = (data.get("first_name") + " " + data.get("last_name")).trim();
+    var kind = offer === "rent" ? "leje" : offer === "demo" ? "demo" : "køb";
+    var model = "Ecoray " + n + " (" + n + " moduler, " + fmtWidth(n) + ")";
+    var cropList = crops.slice();
+    var otherCrops = form.querySelector('input[name="crops"][data-other]').checked ? (data.get("other_crops") || "") : "";
+    if (otherCrops) { // the written crops replace the bare "Other"
+      var otherValue = form.querySelector('input[name="crops"][data-other]').value;
+      cropList = cropList.filter(function (c) { return c !== otherValue; });
+      cropList.push(otherCrops);
+    }
+    var area = data.get("area_ha") || "";
+    var gen = offer === "rent" ? (wantsGenerator() ? "Ja, ønsker generator" : "Nej, har egen 230 V")
+      : (wantsGenerator() ? "Ja, købes med (" + fmtMoney(generatorPrice(n)) + ")" : "Nej, har egen 230 V");
+    var price = fmtPrice(n, offer) + (offer === "rent" ? " for sæsonen 2027" : (wantsGenerator() ? " inkl. generator" : " uden generator"));
+    var hours = parseFloat(area) > 0 ? ", ca. " + Math.round(parseFloat(area) / capacity(n)) + " timer pr. overkørsel på " + num(parseFloat(area)) + " ha" : "";
     var payload = {
       // Every subject starts with SALG, so a sales lead stands out in a shared inbox.
-      _subject: "SALG | " + (offer === "call" ? "Ring mig op: " + (data.get("first_name") + " " + data.get("last_name")).trim()
-        : (orderNow() ? "BESTILLING (" : "Tilbud (") + (offer === "rent" ? "leje" : offer === "demo" ? "demo" : "køb") + "): " + (data.get("farm") || data.get("last_name"))),
-      wants: T.offer[offer] + (orderNow() ? " – BESTILLER NU, send aftale til underskrift" : ""),
-      modules: data.get("modules"),
-      working_width: fmtWidth(n),
-      weed_pressure_in_row: T.weeds[weedsValue()] + " (ca. " + speedKmh() + " km/t)",
-      capacity_ha_per_hour: fmtCapacity(n),
-      pto_generator: (wantsGenerator() ? T.genYes : T.genNo) + (wantsGenerator() && offer !== "rent" ? " (" + fmtMoney(generatorPrice(n)) + ")" : ""),
-      saving_vs_standard_price: offer === "rent" ? "" : fmtMoney(n * ((DA ? STD_PRICE_DKK : STD_PRICE_EUR) - (DA ? INTRO_PRICE_DKK : INTRO_PRICE_EUR))),
-      price_excl_vat: fmtPrice(n, offer) + (offer === "rent" ? "" : (wantsGenerator() ? T.withGen : T.withoutGen)),
-      crops: crops.length ? crops.join(", ") : T.none,
-      other_crops: form.querySelector('input[name="crops"][data-other]').checked ? (data.get("other_crops") || "") : "",
-      farm: data.get("farm") || "",
-      row_crop_area_ha: data.get("area_ha") || "",
-      row_spacing_or_beds: data.get("row_layout") || "",
-      country: data.get("country"),
-      name: (data.get("first_name") + " " + data.get("last_name")).trim(),
+      _subject: "SALG | " + (offer === "call" ? "Ring mig op: " + name
+        : (ordering ? "BESTILLING (" : "Tilbud (") + kind + "): " + (data.get("farm") || data.get("last_name"))),
+      Kort_fortalt: offer === "call" ? "Vil ringes op" + (data.get("phone") ? " på " + data.get("phone") : "")
+        : [(ordering ? "BESTILLER NU" : "Vil have tilbud") + " (" + kind + ")", "Ecoray " + n, price, area ? area + " ha" : "", cropList.join(", ")].filter(Boolean).join(" · "),
+      Navn: name,
+      Telefon: data.get("phone") || "",
       email: data.get("email"),
-      phone: data.get("phone") || "",
-      message: data.get("message") || "",
-      keep_me_updated: data.get("updates") ? "Ja" : "Nej",
-      page_language: DA ? "Dansk" : "English",
+      Bedrift: data.get("farm") || "",
+      Land: data.get("country"),
+      Vil_gerne: T.offer[offer] + (ordering ? " – BESTILLER NU, send aftale til underskrift" : ""),
+      Model: model,
+      Generator: gen,
+      Pris_uden_moms: price,
+      Sparer: offer === "rent" ? "" : fmtMoney(n * ((DA ? STD_PRICE_DKK : STD_PRICE_EUR) - (DA ? INTRO_PRICE_DKK : INTRO_PRICE_EUR))) + " i forhold til standardprisen",
+      Dyrker: cropList.join(", "),
+      Areal_ha: area,
+      Rækker_eller_bede: data.get("row_layout") || "",
+      Ukrudtstryk: ["Lavt", "Middel", "Højt"][["low", "medium", "high"].indexOf(weedsValue())] + " (ca. " + speedKmh() + " km/t)",
+      Kapacitet: fmtCapacity(n) + " ha i timen" + hours,
+      Besked: data.get("message") || "",
+      Nyhedsmail: data.get("updates") ? "Ja tak" : "",
+      Sprog: DA ? "Dansk" : "Engelsk",
+      Kilde: leadSource(),
+      Enhed: /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent) ? "Mobil" : "Computer",
       _replyto: data.get("email")
     };
     if (offer === "call") {
-      ["modules", "working_width", "capacity_ha_per_hour", "pto_generator", "saving_vs_standard_price", "price_excl_vat", "crops", "other_crops", "farm", "row_crop_area_ha", "row_spacing_or_beds", "weed_pressure_in_row", "country"].forEach(function (k) { delete payload[k]; });
+      ["Bedrift", "Land", "Model", "Generator", "Pris_uden_moms", "Sparer", "Dyrker", "Areal_ha", "Rækker_eller_bede", "Ukrudtstryk", "Kapacitet"].forEach(function (k) { delete payload[k]; });
     }
     if (!payload._replyto) delete payload._replyto;
 
@@ -450,7 +483,7 @@
         button.disabled = false;
         button.textContent = submitLabel();
         // The request is never lost: the same details can go as an ordinary email from the visitor's own mail program.
-        var lines = Object.keys(payload).filter(function (k) { return k.charAt(0) !== "_" && payload[k] !== ""; }).map(function (k) { return k.replace(/_/g, " ") + ": " + payload[k]; });
+        var lines = Object.keys(payload).filter(function (k) { return k.charAt(0) !== "_" && payload[k] !== ""; }).map(function (k) { return (k === "email" ? "E-mail" : k.replace(/_/g, " ")) + ": " + payload[k]; });
         var link = document.createElement("a");
         link.href = "mailto:" + RECIPIENT + "?cc=" + COPY_TO + "&subject=" + encodeURIComponent(payload._subject) + "&body=" + encodeURIComponent(lines.join("\n"));
         link.textContent = T.mailInstead;

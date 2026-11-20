@@ -26,13 +26,13 @@
   // Danish phones land on the Danish page, everyone else on the English one.
   var LANG = (navigator.language || navigator.userLanguage || "da").toLowerCase();
   var TARGET = LANG.indexOf("da") === 0
-    ? "https://greenguardautomation.com/reserver.html"
-    : "https://greenguardautomation.com/reserve.html";
+    ? "https://greenguardautomation.com/reserver.html?kilde=qr"
+    : "https://greenguardautomation.com/reserve.html?kilde=qr";
   window.location.replace(TARGET);
 </script>
 <noscript>
   <!-- TARGET (2 of 2) — only used if JavaScript is off -->
-  <meta http-equiv="refresh" content="0; url=https://greenguardautomation.com/reserver.html">
+  <meta http-equiv="refresh" content="0; url=https://greenguardautomation.com/reserver.html?kilde=qr">
 </noscript>
 
 <style>
