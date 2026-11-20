@@ -10,7 +10,7 @@
 
   var ACCESS_KEY = "be6f4123-881a-4f9c-a0f7-cbb25ee520f3"; // Web3Forms key; submissions go to the company's shared inbox
   // Extra inboxes that get the same mail. The free plan sends to one inbox per key, so each extra inbox needs its own key.
-  var EXTRA_KEYS = [];
+  var EXTRA_KEYS = ["4502db15-74ad-4461-a44f-1864c358ea1b"];
   var ENDPOINT = "https://api.web3forms.com/submit";
   var RECIPIENT = "sales@greenguardautomation.com"; // used by the "send it as an email instead" fallback
   var COPY_TO = "btc@greenguardautomation.com";      // copied on that fallback email
