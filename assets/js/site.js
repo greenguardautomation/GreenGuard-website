@@ -92,7 +92,9 @@
     var bar = document.createElement("div");
     bar.className = "offer-bar";
     var text = document.createElement("span");
-    text.textContent = (da ? "Introtilbud på de første 20 moduler: spar 50.000 kr. pr. modul. " : "Launch offer on the first 20 modules: save €7,000 per module. ") + left + ".";
+    var narrow = window.innerWidth < 480; // phones get the short version, so the bar stays two lines
+    text.textContent = (narrow ? (da ? "Introtilbud: spar 50.000 kr. pr. modul. " : "Launch offer: save €7,000 per module. ")
+      : (da ? "Introtilbud på de første 20 moduler: spar 50.000 kr. pr. modul. " : "Launch offer on the first 20 modules: save €7,000 per module. ")) + left + ".";
     var link = document.createElement("a");
     link.href = cta.href;
     link.textContent = da ? "Få et tilbud" : "Get a quote";
@@ -102,12 +104,16 @@
     x.textContent = "\u00d7";
     x.addEventListener("click", function () {
       bar.remove();
-      document.body.style.paddingBottom = "";
+      spacer.style.paddingBottom = "";
+      document.documentElement.style.removeProperty("--bar-h");
       try { sessionStorage.setItem("gg-offer-closed", "1"); } catch (e) {}
     });
     bar.appendChild(text); bar.appendChild(link); bar.appendChild(x);
     document.body.appendChild(bar);
-    document.body.style.paddingBottom = bar.offsetHeight + "px";
+    // Room for the bar at the very end of the page, added to the footer so no bare strip shows under it.
+    var spacer = document.querySelector("footer") || document.body;
+    spacer.style.paddingBottom = (parseFloat(window.getComputedStyle(spacer).paddingBottom) || 0) + bar.offsetHeight + "px";
+    document.documentElement.style.setProperty("--bar-h", bar.offsetHeight + "px");
   })();
 
   // Current year in footer
