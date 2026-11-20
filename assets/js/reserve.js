@@ -1,16 +1,16 @@
 /* Reserve page (reserve.html in English, reserver.html in Danish): live summary and form submission.
    Submissions are emailed to GreenGuard through Web3Forms (web3forms.com),
-   because GitHub Pages cannot run server code. Every submission is emailed to the
-   inbox of the Web3Forms account that owns the access key below (the company's shared inbox).
-   To change the receiving inbox, change it in that Web3Forms account, or create a new
-   access key and replace ACCESS_KEY. The key is not a secret; it can only send mail to its own inbox.
+   because GitHub Pages cannot run server code. Each access key below belongs to one inbox:
+   ACCESS_KEY sends to sales@greenguardautomation.com, and every key in EXTRA_KEYS gets a copy.
+   To change an inbox, create a form for the new address in the Web3Forms account and swap the key.
+   The keys are not secrets; each can only send mail to its own inbox.
    The page language comes from <html lang="..">: "da" uses the Danish texts. */
 (function () {
   "use strict";
 
-  var ACCESS_KEY = "be6f4123-881a-4f9c-a0f7-cbb25ee520f3"; // Web3Forms key; submissions go to the company's shared inbox
+  var ACCESS_KEY = "adc2c9d5-be7d-47c6-911f-358bbc07d0a1"; // Web3Forms key for sales@greenguardautomation.com
   // Extra inboxes that get the same mail. The free plan sends to one inbox per key, so each extra inbox needs its own key.
-  var EXTRA_KEYS = ["4502db15-74ad-4461-a44f-1864c358ea1b"];
+  var EXTRA_KEYS = ["4502db15-74ad-4461-a44f-1864c358ea1b"]; // btc@greenguardautomation.com
   var ENDPOINT = "https://api.web3forms.com/submit";
   var RECIPIENT = "sales@greenguardautomation.com"; // used by the "send it as an email instead" fallback
   var COPY_TO = "btc@greenguardautomation.com";      // copied on that fallback email
