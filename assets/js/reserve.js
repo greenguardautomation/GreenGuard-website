@@ -9,6 +9,8 @@
   "use strict";
 
   var ACCESS_KEY = "be6f4123-881a-4f9c-a0f7-cbb25ee520f3"; // Web3Forms key; submissions go to the company's shared inbox
+  // Extra inboxes that get the same mail. The free plan sends to one inbox per key, so each extra inbox needs its own key.
+  var EXTRA_KEYS = [];
   var ENDPOINT = "https://api.web3forms.com/submit";
   var RECIPIENT = "sales@greenguardautomation.com"; // used by the "send it as an email instead" fallback
   var COPY_TO = "btc@greenguardautomation.com";      // copied on that fallback email
@@ -375,8 +377,9 @@
     var offer = offerValue();
     var ordering = orderNow();
     var payload = {
-      _subject: (offer === "call" ? "Ecoray: ring mig op: " + (data.get("first_name") + " " + data.get("last_name")).trim()
-        : (orderNow() ? "Ecoray BESTILLING (" : "Ecoray tilbud (") + (offer === "rent" ? "leje" : offer === "demo" ? "demo" : "køb") + "): " + (data.get("farm") || data.get("last_name"))),
+      // Every subject starts with SALG, so a sales lead stands out in a shared inbox.
+      _subject: "SALG | " + (offer === "call" ? "Ring mig op: " + (data.get("first_name") + " " + data.get("last_name")).trim()
+        : (orderNow() ? "BESTILLING (" : "Tilbud (") + (offer === "rent" ? "leje" : offer === "demo" ? "demo" : "køb") + "): " + (data.get("farm") || data.get("last_name"))),
       wants: T.offer[offer] + (orderNow() ? " – BESTILLER NU, send aftale til underskrift" : ""),
       modules: data.get("modules"),
       working_width: fmtWidth(n),
@@ -409,7 +412,7 @@
     button.textContent = T.sending;
 
     // What the form service receives: its own fields first, then every filled-in answer.
-    var body = { access_key: ACCESS_KEY, subject: payload._subject, from_name: DA ? "GreenGuard hjemmeside" : "GreenGuard website" };
+    var body = { access_key: ACCESS_KEY, subject: payload._subject, from_name: "GreenGuard SALG (hjemmeside)" };
     if (payload._replyto) body.replyto = payload._replyto;
     Object.keys(payload).forEach(function (k) { if (k.charAt(0) !== "_" && payload[k] !== "") body[k] = payload[k]; });
 
@@ -427,6 +430,11 @@
       .then(function (res) {
         window.clearTimeout(timer); window.clearTimeout(slowTimer);
         if (!res.ok || String(res.body.success) !== "true") throw new Error(res.body.message || "Failed");
+        // Copies to the extra inboxes. The visitor is not kept waiting for these.
+        EXTRA_KEYS.forEach(function (key) {
+          var copy = {}; Object.keys(body).forEach(function (k) { copy[k] = body[k]; }); copy.access_key = key;
+          try { fetch(ENDPOINT, { method: "POST", headers: { "Content-Type": "application/json", "Accept": "application/json" }, body: JSON.stringify(copy), keepalive: true }).catch(function () {}); } catch (e) {}
+        });
         document.getElementById("order-form-wrap").hidden = true;
         var done = document.getElementById("order-done");
         document.getElementById("done-text").textContent = offer === "call" ? T.callThanks(data.get("first_name")) : ordering ? T.orderThanks(data.get("first_name")) : T.thanks(data.get("first_name"), data.get("email"), data.get("modules"));
