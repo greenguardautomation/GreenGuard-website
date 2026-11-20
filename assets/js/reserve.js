@@ -54,7 +54,7 @@
     weeds: { low: "Lavt", medium: "Middel", high: "Højt" },
     perDay: function (ha) { return "Ca. " + ha + " hektar på en arbejdsdag på " + DAY_HOURS + " timer"; },
     perPass: function (area, h) { return "Dine " + area + " ha: ca. " + h + " timer pr. overkørsel"; },
-    orderSubmit: "Send bestilling", titleQuote: "Få et tilbud", titleOrder: "Bestil Ecoray",
+    orderSubmit: "Send bestilling", titleQuote: "Få et tilbud", titleOrder: "Bestil Ecoray", doneOrder: "Tak for din bestilling",
     orderThanks: function (name) { return "Tak, " + name + ". Vi sender dig aftalen til underskrift. Bestillingen er først bindende, når aftalen er underskrevet."; },
     daysLeft: function (d) { return d === 1 ? "Sidste dag for introprisen" : "Introprisen gælder " + d + " dage endnu"; },
     failed: "Din forespørgsel blev ikke sendt. Prøv igen, eller ",
@@ -86,7 +86,7 @@
     weeds: { low: "Low", medium: "Medium", high: "High" },
     perDay: function (ha) { return "About " + ha + " hectares in a " + DAY_HOURS + "-hour working day"; },
     perPass: function (area, h) { return "Your " + area + " ha: about " + h + " hours per pass"; },
-    orderSubmit: "Send order", titleQuote: "Get a quote", titleOrder: "Order Ecoray",
+    orderSubmit: "Send order", titleQuote: "Get a quote", titleOrder: "Order Ecoray", doneOrder: "Thank you for your order",
     orderThanks: function (name) { return "Thanks, " + name + ". We'll send you the agreement to sign. The order is only binding once the agreement is signed."; },
     daysLeft: function (d) { return d === 1 ? "Last day for the introductory price" : "Introductory price ends in " + d + " days"; },
     failed: "Your request wasn't sent. Try again, or ",
@@ -437,6 +437,8 @@
         });
         document.getElementById("order-form-wrap").hidden = true;
         var done = document.getElementById("order-done");
+        var doneTitle = document.getElementById("done-title");
+        if (doneTitle && ordering && offer !== "call") doneTitle.textContent = T.doneOrder;
         document.getElementById("done-text").textContent = offer === "call" ? T.callThanks(data.get("first_name")) : ordering ? T.orderThanks(data.get("first_name")) : T.thanks(data.get("first_name"), data.get("email"), data.get("modules"));
         done.hidden = false;
         done.focus();
