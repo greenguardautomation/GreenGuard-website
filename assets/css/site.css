@@ -580,3 +580,67 @@ legend { font-size: 18px; font-weight: 600; margin-bottom: 14px; padding: 0; }
 @media (max-width: 520px) { .btn-row--start { align-items: stretch; } }
 .panel-split .split { grid-template-columns: 1fr 1.35fr; }
 @media (max-width: 860px) { .panel-split .split { grid-template-columns: 1fr; } }
+
+/* ---------- Phones ---------- */
+@media (max-width: 760px) {
+  /* Tap targets: at least about 40 px high */
+  .menu-btn { min-height: 40px; padding: 8px 16px; }
+  .lang-link { padding: 10px 10px; }
+  .footer .footer-cols li + li { margin-top: 0; }
+  .footer .footer-cols a, .footer-base a { display: inline-block; padding: 9px 0; }
+  .footer-head { margin-bottom: 4px; }
+  .footer-cols { gap: 20px 28px; }
+  .footer-base { gap: 2px 24px; }
+  .person a { padding: 8px 0; margin-top: 4px; }
+  .rig-views button { min-height: 40px; padding: 8px 18px; }
+  .sheet li a { padding: 11px 2px; }
+}
+@media (max-width: 620px) {
+  .section { padding-top: 56px; padding-bottom: 56px; }
+  /* Key figures: number and label side by side on a dark card, so they stay readable over any picture */
+  .figures {
+    gap: 0; padding: 6px 16px; border-radius: 8px; text-align: left;
+    background: rgba(14,18,21,.62); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+  }
+  .figure { display: grid; grid-template-columns: 7.4em 1fr; gap: 12px; align-items: center; padding: 10px 0; }
+  .figure + .figure { border-top: 1px solid rgba(255,255,255,.12); }
+  .figure strong { font-size: 21px; white-space: nowrap; }
+  .figure span { margin-top: 0; font-size: 14px; line-height: 1.3; color: #dfe5e0; }
+  .panel-foot { gap: 18px; }
+  /* Product picture panels: the picture sits in the flow between the heading and the figures, not behind them */
+  .panel-media--contain, .panel-media--contain.has-figures {
+    position: relative; inset: auto; top: auto; bottom: auto; order: 1; width: 100vw; margin: 18px 0; flex: none;
+  }
+  .panel-media--contain picture { width: 100%; height: auto; }
+  .panel:has(> .panel-media--contain) .panel-head { order: 0; }
+  .panel:has(> .panel-media--contain) .panel-foot { order: 2; }
+  .panel:has(> .panel-media--contain) { justify-content: flex-start; gap: 6px; }
+}
+@media (max-width: 560px) and (min-width: 300px) {
+  /* Team: two portraits side by side keeps the page short */
+  .team { grid-template-columns: 1fr 1fr; gap: 24px 14px; margin-top: 36px; }
+  .person h3 { margin-top: 12px; font-size: 16px; }
+  .person .role { font-size: 14px; }
+  .person p { font-size: 14px; line-height: 1.4; margin-top: 6px; }
+}
+@media (max-width: 380px) {
+  /* Narrow phones: the header must fit without cutting the menu button */
+  .brand { gap: 8px; }
+  .brand span { font-size: 13px; letter-spacing: .1em; }
+  .nav-cta { gap: 2px; }
+  .lang-link { padding: 10px 6px; font-size: 13px; }
+  .menu-btn { padding: 8px 12px; }
+}
+/* Nothing may make a phone page wider than the screen */
+.order-visual { overflow: hidden; }
+@media (max-width: 620px) {
+  .specs { table-layout: fixed; }
+  .specs th { width: 40%; padding-right: 14px; }
+  .specs th, .specs td { overflow-wrap: anywhere; -webkit-hyphens: auto; hyphens: auto; }
+  /* The offer bar lies over the bottom of the first screen: keep the hero buttons clear of it */
+  .panel--hero { padding-bottom: calc(9vh + var(--bar-h, 0px)); }
+}
+@media (max-width: 760px) {
+  .offer-bar a { padding: 10px 4px; }
+  .offer-bar button { width: 40px; height: 40px; right: 2px; }
+}
