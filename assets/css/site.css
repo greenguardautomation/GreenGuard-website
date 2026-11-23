@@ -644,3 +644,38 @@ legend { font-size: 18px; font-weight: 600; margin-bottom: 14px; padding: 0; }
   .offer-bar a { padding: 10px 4px; }
   .offer-bar button { width: 40px; height: 40px; right: 2px; }
 }
+
+/* ---------- Free on-farm trial with SMV:Robot (trial.html, da/trial.html, home hero) ---------- */
+.hero-pill {
+  display: inline-flex; align-items: center; gap: 10px; max-width: 100%;
+  padding: 7px 16px 7px 7px; border-radius: 999px;
+  background: rgba(14,18,21,.55); color: var(--paper); text-decoration: none; text-align: left;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.3);
+  -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+  font-size: 15px; font-weight: 500; line-height: 1.3;
+  transition: background-color .2s ease, box-shadow .2s ease;
+}
+.hero-pill:hover, .hero-pill:focus-visible { background: rgba(14,18,21,.8); box-shadow: inset 0 0 0 1px rgba(255,255,255,.65); }
+.hero-pill b {
+  flex: none; padding: 4px 10px; border-radius: 999px; background: var(--leaf); color: var(--soil);
+  font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+}
+.hero-pill i { font-style: normal; flex: none; transition: transform .2s ease; }
+.hero-pill:hover i { transform: translateX(3px); }
+@media (prefers-reduced-motion: reduce) { .hero-pill i { transition: none; } }
+@media (max-width: 520px) { .hero-pill { font-size: 14px; } }
+
+.page-head .btn-row--start { margin-top: 28px; }
+.trial-figures { padding-top: 56px; padding-bottom: 56px; }
+.trial-figures .figures { max-width: 900px; }
+.trial-form { max-width: 560px; margin: 36px auto 0; }
+.trial-form .btn { width: 100%; margin-top: 24px; padding: 14px 24px; }
+.trial-form fieldset { margin-top: 24px; }
+.trial-form legend { font-size: 15px; font-weight: 500; margin-bottom: 8px; }
+.trial-check { list-style: none; margin: 28px 0 0; padding: 0; display: grid; gap: 12px; }
+.trial-check li { position: relative; padding-left: 30px; }
+.trial-check li::before {
+  content: ""; position: absolute; left: 2px; top: .3em; width: 14px; height: 8px;
+  border-left: 2.5px solid var(--forest); border-bottom: 2.5px solid var(--forest); transform: rotate(-45deg);
+}
+#signup .done { padding-top: 8px; }
