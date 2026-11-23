@@ -26,7 +26,7 @@
   <link rel="apple-touch-icon" href="assets/img/brand/GGA_Logo-500.png">
 
   <link rel="preload" href="assets/fonts/archivo-latin-wdth-normal.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="assets/css/site.css?v=f8759718">
+  <link rel="stylesheet" href="assets/css/site.css?v=5b372981">
 </head>
 <body>
 <a class="skip-link" href="#main">Spring til indhold</a>
@@ -161,8 +161,18 @@
           <label class="choice"><input type="radio" name="offer" value="rent"><span>Leje i 2027</span></label>
           <label class="choice"><input type="radio" name="offer" value="demo"><span>Demo først</span></label>
           <label class="choice"><input type="radio" name="offer" value="call"><span>Ring mig op</span></label>
+          <label class="choice choice--two choice--wide"><input type="radio" name="offer" value="trial"><span>Gratis afprøvning<small>Op til 3 måneder på din mark med SMV:Robot-tilskud</small></span></label>
           </div>
           <p class="hint hint--below" id="call-hint" hidden>Skriv dit navn og telefonnummer, så ringer vi til en uforpligtende snak. Du behøver ikke vælge noget endnu.</p>
+          <div class="offer-note" id="trial-hint" hidden>
+            <p>SMV:Robot kan dække op til 125.000 kr. af en afprøvning på din egen mark, uden krav om egenbetaling. GreenGuard er godkendt robotintegrator og hjælper dig med ansøgningen. <a href="da/trial.html">Læs mere om ordningen</a>.</p>
+            <p class="field-label" id="staff-label">Har bedriften mindst 3 årsværk?</p>
+            <div class="choice-row choice-row--3" role="radiogroup" aria-labelledby="staff-label">
+              <label class="choice"><input type="radio" name="staff" value="yes"><span>Ja</span></label>
+              <label class="choice"><input type="radio" name="staff" value="no"><span>Nej</span></label>
+              <label class="choice"><input type="radio" name="staff" value="unsure"><span>Ved ikke</span></label>
+            </div>
+          </div>
         </fieldset>
 
         <fieldset data-detail>
@@ -198,7 +208,7 @@
           <p class="hint hint--below">Jo mere ukrudt, jo langsommere kører du. Lavt: ca. 3 km/t. Middel: ca. 2 km/t. Højt: ca. 1 km/t.</p>
         </fieldset>
 
-        <fieldset data-detail>
+        <fieldset data-detail data-trial-keep>
           <legend>Hvad dyrker du?</legend>
           <div class="checks">
           <label class="choice"><input type="checkbox" name="crops" value="Gulerødder"><span>Gulerødder</span></label>
@@ -216,7 +226,7 @@
           <div class="field" id="other-crops" hidden><label for="f-other">Hvilke afgrøder dyrker du?</label><input id="f-other" name="other_crops" placeholder="Fx pastinak, selleri, persillerod" autocomplete="off"></div>
         </fieldset>
 
-        <fieldset data-detail>
+        <fieldset data-detail data-trial-keep>
           <legend>Din bedrift</legend>
           <div class="field"><label for="f-farm">Bedriftens navn</label><input id="f-farm" name="farm" autocomplete="organization"></div>
           <div class="field"><label for="f-area">Areal med rækkeafgrøder (ha)</label><input id="f-area" name="area_ha" type="number" min="0" step="0.5" inputmode="decimal"></div>
@@ -287,6 +297,6 @@
 </dialog>
 
 <script src="assets/js/site.js?v=1f27e037" defer></script>
-<script src="assets/js/reserve.js?v=b82f3a3a" defer></script>
+<script src="assets/js/reserve.js?v=eb09041c" defer></script>
 </body>
 </html>
