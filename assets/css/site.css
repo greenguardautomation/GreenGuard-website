@@ -679,10 +679,3 @@ legend { font-size: 18px; font-weight: 600; margin-bottom: 14px; padding: 0; }
   border-left: 2.5px solid var(--forest); border-bottom: 2.5px solid var(--forest); transform: rotate(-45deg);
 }
 #signup .done { padding-top: 8px; }
-/* Quote form: the free-trial (SMV:Robot) choice spans the full row, with its explanation below */
-.choice--wide { grid-column: 1 / -1; }
-.offer-note { margin-top: 12px; padding: 14px 16px 16px; border-radius: var(--radius); background: var(--mist); font-size: 14px; color: var(--ink-2); }
-.offer-note p { margin: 0; }
-.offer-note .field-label { color: var(--ink); margin: 14px 0 8px; }
-.offer-note .choice span { background: var(--paper, #fff); }
-.offer-note .choice span { color: var(--ink); }
