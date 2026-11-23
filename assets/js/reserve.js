@@ -44,7 +44,10 @@
     genYes: "Ja, købes med", genNo: "Nej, har egen 230 V",
     save: function (x) { return "Du sparer " + x; },
     left: function (d) { return d === 1 ? "Sidste dag for introprisen · kun de første 20 moduler" : "Introprisen gælder " + d + " dage endnu · kun de første 20 moduler"; },
-    offer: { buy: "Køb", rent: "Leje i 2027", demo: "Demo først", call: "Ring mig op" },
+    offer: { buy: "Køb", rent: "Leje i 2027", demo: "Demo først", call: "Ring mig op", trial: "Gratis afprøvning (SMV:Robot)" },
+    trialSubmit: "Skriv mig op til afprøvning",
+    trialThanks: function (name) { return "Tak, " + name + ". Vi ringer til dig, ser på om din bedrift kan søge SMV:Robot, og giver besked, så snart næste ansøgningsrunde åbner."; },
+    staff: { yes: "Ja", no: "Nej", unsure: "Ved ikke" },
     thanks: function (name, email, n) {
       return "Tak, " + name + ". Vi kontakter dig på " + email + " med et tilbud på " + n + (n === "1" ? " modul." : " moduler.");
     },
@@ -76,7 +79,10 @@
     genYes: "Yes, bought with the machine", genNo: "No, has own 230 V",
     save: function (x) { return "You save " + x; },
     left: function (d) { return d === 1 ? "Last day for the introductory price · first 20 modules only" : "Introductory price ends in " + d + " days · first 20 modules only"; },
-    offer: { buy: "Buy", rent: "Rent in 2027", demo: "Demo first", call: "Just call me" },
+    offer: { buy: "Buy", rent: "Rent in 2027", demo: "Demo first", call: "Just call me", trial: "Free trial (SMV:Robot)" },
+    trialSubmit: "Sign me up for a trial",
+    trialThanks: function (name) { return "Thanks, " + name + ". We'll call you, check whether your farm can apply for SMV:Robot, and let you know as soon as the next application round opens."; },
+    staff: { yes: "Yes", no: "No", unsure: "Not sure" },
     thanks: function (name, email, n) {
       return "Thanks, " + name + ". We'll contact you at " + email + " with a quote for " + n + (n === "1" ? " module." : " modules.");
     },
@@ -221,7 +227,7 @@
     var o = offerValue(), box = form.elements.order_now;
     return (o === "buy" || o === "rent") && box && box.checked;
   }
-  function submitLabel() { return offerValue() === "call" ? T.callSubmit : (orderNow() ? T.orderSubmit : T.submit); }
+  function submitLabel() { var o = offerValue(); return o === "call" ? T.callSubmit : o === "trial" ? T.trialSubmit : (orderNow() ? T.orderSubmit : T.submit); }
   function fmtMoney(x) { return DA ? x.toLocaleString(LOCALE) + " kr." : "€" + x.toLocaleString(LOCALE); }
   function offerValue() {
     var o = form.querySelector('input[name="offer"]:checked');
@@ -276,17 +282,22 @@
     var stdLine = document.getElementById("std-line"), stdPrice = document.getElementById("std-price"), badge = document.getElementById("save-badge"), only = document.getElementById("only-20");
     if (stdPrice) stdPrice.textContent = fmtMoney(n * stdUnit + (wantsGenerator() ? generatorPrice(n) : 0));
     if (badge) badge.textContent = T.save(fmtMoney(n * (stdUnit - introUnit)));
-    [stdLine, badge, only].forEach(function (el) { if (el) el.hidden = renting || offer === "call"; });
+    [stdLine, badge, only].forEach(function (el) { if (el) el.hidden = renting || offer === "call" || offer === "trial"; });
     var genPrice = document.getElementById("gen-price"), genNone = document.getElementById("gen-none"), genHint = document.getElementById("gen-hint");
     if (genPrice) genPrice.textContent = offer === "rent" ? T.genAsk : "+ " + fmtMoney(generatorPrice(n));
     if (genNone) genNone.textContent = offer === "rent" ? "" : T.genNone;
     if (genHint) genHint.textContent = T.genHint(PTO_HP[n]);
     caption.textContent = n + (n === 1 ? T.module : T.modules) + num(n * MODULE_WIDTH_M) + T.width;
     // "Just call me": hide everything except the contact details.
-    var call = offer === "call";
-    form.parentNode.querySelectorAll("[data-detail]").forEach(function (el) { el.hidden = call; });
+    // "Free trial" (SMV:Robot): no prices, modules or ordering, but keep the crops and the farm details.
+    var call = offer === "call", trial = offer === "trial";
+    form.parentNode.querySelectorAll("[data-detail]").forEach(function (el) { el.hidden = call || (trial && !el.hasAttribute("data-trial-keep")); });
     var hint = document.getElementById("call-hint");
     if (hint) hint.hidden = !call;
+    var trialHint = document.getElementById("trial-hint");
+    if (trialHint) trialHint.hidden = !trial;
+    var dl = document.getElementById("deadline");
+    if (dl && dl.getAttribute("data-on")) dl.hidden = trial;
     // "Other" crop: room to write which ones.
     var otherBox = form.querySelector('input[name="crops"][data-other]'), otherField = document.getElementById("other-crops");
     if (otherBox && otherField) otherField.hidden = !otherBox.checked;
@@ -317,7 +328,7 @@
   var deadline = document.getElementById("deadline");
   if (deadline) {
     var daysLeft = Math.ceil((Date.parse("2026-12-15T23:59:59+01:00") - Date.now()) / 86400000);
-    if (daysLeft >= 1) { deadline.textContent = T.left(daysLeft); deadline.hidden = false; }
+    if (daysLeft >= 1) { deadline.textContent = T.left(daysLeft); deadline.hidden = false; deadline.setAttribute("data-on", "1"); }
   }
   form.addEventListener("change", function (e) {
     if (["modules", "offer", "weeds", "order_now", "crops", "generator"].indexOf(e.target.name) !== -1) updateSummary();
@@ -325,6 +336,8 @@
   ["area_ha"].forEach(function (k) {
     form.elements[k].addEventListener("input", updateSummary);
   });
+  // A link with #afproevning or #trial opens the form with the free trial chosen.
+  if (/^#(afproevning|trial)$/i.test(window.location.hash)) form.querySelector('input[name="offer"][value="trial"]').checked = true;
   updateSummary();
   if (/^#(bestil|order)$/i.test(window.location.hash)) setOrderMode(true);
 
@@ -350,16 +363,19 @@
 
   function validate() {
     var first = null;
-    var call = offerValue() === "call";
+    var call = offerValue() === "call", trial = offerValue() === "trial";
     var phone = document.getElementById("f-phone");
     var hasPhone = !!phone.value.trim();
-    // A call-back needs a first name and a phone number or an email. A quote needs full name and email.
-    var rules = call ? [["f-first", T.first], ["f-email", T.contact]] : [["f-first", T.first], ["f-last", T.last], ["f-email", T.email]];
+    // A call-back needs a first name and a phone number or an email. A free trial needs a full name and a phone
+    // number or an email. A quote needs full name and email.
+    var rules = call ? [["f-first", T.first], ["f-email", T.contact]]
+      : trial ? [["f-first", T.first], ["f-last", T.last], ["f-email", T.contact]]
+      : [["f-first", T.first], ["f-last", T.last], ["f-email", T.email]];
     setError(document.getElementById("f-last"), "");
     rules.forEach(function (pair) {
       var input = document.getElementById(pair[0]);
       var empty = !input.value.trim();
-      var bad = (empty && !(call && input.type === "email" && hasPhone)) || (!empty && input.type === "email" && !input.checkValidity());
+      var bad = (empty && !((call || trial) && input.type === "email" && hasPhone)) || (!empty && input.type === "email" && !input.checkValidity());
       var msg = bad ? (input.type === "email" && !empty ? T.emailBad : pair[1]) : "";
       setError(input, msg);
       if (bad && !first) first = input;
@@ -410,8 +426,10 @@
     var payload = {
       // Every subject starts with SALG, so a sales lead stands out in a shared inbox.
       _subject: "SALG | " + (offer === "call" ? "Ring mig op: " + name
+        : offer === "trial" ? "Gratis afprøvning (SMV:Robot): " + (data.get("farm") || name)
         : (ordering ? "BESTILLING (" : "Tilbud (") + kind + "): " + (data.get("farm") || data.get("last_name"))),
       Kort_fortalt: offer === "call" ? "Vil ringes op" + (data.get("phone") ? " på " + data.get("phone") : "")
+        : offer === "trial" ? ["Vil afprøve Ecoray gratis via SMV:Robot", area ? area + " ha" : "", cropList.join(", ")].filter(Boolean).join(" · ")
         : [(ordering ? "BESTILLER NU" : "Vil have tilbud") + " (" + kind + ")", "Ecoray " + n, price, area ? area + " ha" : "", cropList.join(", ")].filter(Boolean).join(" · "),
       Navn: name,
       Telefon: data.get("phone") || "",
@@ -419,6 +437,7 @@
       Bedrift: data.get("farm") || "",
       Land: data.get("country"),
       Vil_gerne: T.offer[offer] + (ordering ? " – BESTILLER NU, send aftale til underskrift" : ""),
+      Mindst_3_årsværk: offer === "trial" && data.get("staff") ? ({ yes: "Ja", no: "Nej", unsure: "Ved ikke" })[data.get("staff")] : "",
       Model: model,
       Generator: gen,
       Pris_uden_moms: price,
@@ -437,6 +456,9 @@
     };
     if (offer === "call") {
       ["Bedrift", "Land", "Model", "Generator", "Pris_uden_moms", "Sparer", "Dyrker", "Areal_ha", "Rækker_eller_bede", "Ukrudtstryk", "Kapacitet"].forEach(function (k) { delete payload[k]; });
+    }
+    if (offer === "trial") {
+      ["Model", "Generator", "Pris_uden_moms", "Sparer", "Ukrudtstryk", "Kapacitet"].forEach(function (k) { delete payload[k]; });
     }
     if (!payload._replyto) delete payload._replyto;
 
@@ -472,7 +494,7 @@
         var done = document.getElementById("order-done");
         var doneTitle = document.getElementById("done-title");
         if (doneTitle && ordering && offer !== "call") doneTitle.textContent = T.doneOrder;
-        document.getElementById("done-text").textContent = offer === "call" ? T.callThanks(data.get("first_name")) : ordering ? T.orderThanks(data.get("first_name")) : T.thanks(data.get("first_name"), data.get("email"), data.get("modules"));
+        document.getElementById("done-text").textContent = offer === "call" ? T.callThanks(data.get("first_name")) : offer === "trial" ? T.trialThanks(data.get("first_name")) : ordering ? T.orderThanks(data.get("first_name")) : T.thanks(data.get("first_name"), data.get("email"), data.get("modules"));
         done.hidden = false;
         done.focus();
         window.scrollTo({ top: 0 });

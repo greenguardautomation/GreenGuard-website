@@ -27,7 +27,7 @@
   <link rel="apple-touch-icon" href="assets/img/brand/GGA_Logo-500.png">
 
   <link rel="preload" href="assets/fonts/archivo-latin-wdth-normal.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="assets/css/site.css?v=f8759718">
+  <link rel="stylesheet" href="assets/css/site.css?v=5b372981">
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
@@ -162,8 +162,18 @@
           <label class="choice"><input type="radio" name="offer" value="rent"><span>Rent in 2027</span></label>
           <label class="choice"><input type="radio" name="offer" value="demo"><span>Demo first</span></label>
           <label class="choice"><input type="radio" name="offer" value="call"><span>Just call me</span></label>
+          <label class="choice choice--two choice--wide"><input type="radio" name="offer" value="trial"><span>Free trial<small>Up to 3 months on your farm with an SMV:Robot grant (farms in Denmark)</small></span></label>
           </div>
           <p class="hint hint--below" id="call-hint" hidden>Leave your name and phone number and we will call you for a chat, with no commitment. You do not need to choose anything yet.</p>
+          <div class="offer-note" id="trial-hint" hidden>
+            <p>For farms in Denmark, the SMV:Robot scheme can cover up to DKK 125,000 of a trial on your own farm, with no co-financing required. GreenGuard is an approved robot integrator and helps you with the application. <a href="trial.html">Read more about the scheme</a>.</p>
+            <p class="field-label" id="staff-label">Does the farm have at least 3 full-time equivalents?</p>
+            <div class="choice-row choice-row--3" role="radiogroup" aria-labelledby="staff-label">
+              <label class="choice"><input type="radio" name="staff" value="yes"><span>Yes</span></label>
+              <label class="choice"><input type="radio" name="staff" value="no"><span>No</span></label>
+              <label class="choice"><input type="radio" name="staff" value="unsure"><span>Not sure</span></label>
+            </div>
+          </div>
         </fieldset>
 
         <fieldset data-detail>
@@ -199,7 +209,7 @@
           <p class="hint hint--below">The more weeds, the slower you drive. Low: approx. 3 km/h. Medium: approx. 2 km/h. High: approx. 1 km/h.</p>
         </fieldset>
 
-        <fieldset data-detail>
+        <fieldset data-detail data-trial-keep>
           <legend>What do you grow?</legend>
           <div class="checks">
           <label class="choice"><input type="checkbox" name="crops" value="Carrots"><span>Carrots</span></label>
@@ -217,7 +227,7 @@
           <div class="field" id="other-crops" hidden><label for="f-other">Which crops do you grow?</label><input id="f-other" name="other_crops" placeholder="E.g. parsnip, celeriac, parsley root" autocomplete="off"></div>
         </fieldset>
 
-        <fieldset data-detail>
+        <fieldset data-detail data-trial-keep>
           <legend>Your farm</legend>
           <div class="field"><label for="f-farm">Farm name</label><input id="f-farm" name="farm" autocomplete="organization"></div>
           <div class="field"><label for="f-area">Row-crop area (ha)</label><input id="f-area" name="area_ha" type="number" min="0" step="0.5" inputmode="decimal"></div>
@@ -288,6 +298,6 @@
 </dialog>
 
 <script src="assets/js/site.js?v=1f27e037" defer></script>
-<script src="assets/js/reserve.js?v=b82f3a3a" defer></script>
+<script src="assets/js/reserve.js?v=eb09041c" defer></script>
 </body>
 </html>
